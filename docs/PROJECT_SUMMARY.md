@@ -33,7 +33,7 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
    - DataUpdateCoordinator implementation
    - Manages data fetching and updates
    - Processes raw API data into sensor values
-   - Updates every 30 minutes
+   - Configurable update interval (default: 5 minutes)
 
 6. **`custom_components/oura/sensor.py`**
    - Sensor platform implementation
@@ -150,7 +150,7 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 
 ### Readiness Sensors (4)
 1. Readiness Score
-2. Temperature Deviation (C)
+2. Temperature Deviation (°C)
 3. Resting Heart Rate (bpm)
 4. HRV Balance (score)
 
@@ -175,7 +175,8 @@ The integration uses these Oura v2 API endpoints:
 ## Update Mechanism
 
 - **Method**: DataUpdateCoordinator
-- **Interval**: 30 minutes (configurable)
+- **Default Interval**: 5 minutes (configurable via options flow)
+- **Range**: 1-60 minutes
 - **Parallel Fetching**: All three endpoints fetched concurrently
 - **Error Handling**: Individual endpoint failures don't break others
 
@@ -253,13 +254,13 @@ After installation:
 
 Users can customize:
 
-- Update interval (edit const.py)
-- Debug logging level
+- **Update interval**: Settings → Devices & Services → Oura Ring → CONFIGURE (1-60 minutes)
+- **Debug logging level**: configuration.yaml
 - Sensor filtering (comment out unwanted sensors in const.py)
 
 ## Known Limitations
 
-1. **Data Freshness**: Updates every 30 minutes (API limitation)
+1. **Data Freshness**: Updates every 5 minutes by default (configurable 1-60 minutes)
 2. **Historical Data**: Only fetches last 1 day by default
 3. **Rate Limits**: Subject to Oura API rate limits
 4. **Dependencies**: Requires active Oura subscription
@@ -272,10 +273,10 @@ Potential improvements for future versions:
 - Heart rate trend sensors
 - Workout session sensors
 - Sleep stage graphs
-- Configurable update intervals via UI
 - Device tracking integration
 - Statistics and trends
 - Binary sensors for low scores
+- Custom icon/logo branding
 
 ## Support and Maintenance
 
@@ -286,7 +287,7 @@ Potential improvements for future versions:
 
 ## Credits
 
-- **Original Integration**: johro897/oura-custom-component (v1 API)
+- **Original Integration**: nitobuendia/oura-custom-component (v1 API)
 - **API Documentation**: Oura Cloud v2 API Docs
 - **Framework**: Home Assistant
 
@@ -299,7 +300,9 @@ MIT License - See LICENSE file
 - **v1.0.0** - Initial release
   - OAuth2 authentication
   - 22 sensors (sleep, readiness, activity)
+  - Configurable update interval (1-60 minutes)
   - HACS compatible
+  - Custom icon branding
   - Full documentation
 
 ---

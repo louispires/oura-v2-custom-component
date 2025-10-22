@@ -215,11 +215,11 @@ This guide walks you through installing and configuring the Oura Ring v2 integra
 **Problem**: Integration configured but sensors unavailable
 
 **Solutions**:
-1. Wait 30 minutes for first data update
+1. Wait 5 minutes for first data update
 2. Ensure Oura Ring is synced with mobile app
 3. Check Home Assistant logs for API errors:
    ```
-   Settings  System  Logs
+   Settings → System → Logs
    Search for "oura"
    ```
 4. Verify you have recent data in the Oura mobile app
@@ -231,7 +231,7 @@ This guide walks you through installing and configuring the Oura Ring v2 integra
 
 **Solutions**:
 1. Sync your Oura Ring with the mobile app
-2. Wait for the next 30-minute update cycle
+2. Wait for the next update cycle (default: 5 minutes)
 3. Restart the integration:
    - Settings  Devices & Services
    - Click on Oura Ring
@@ -251,16 +251,16 @@ This guide walks you through installing and configuring the Oura Ring v2 integra
 
 ### Changing Update Interval
 
-The default update interval is 30 minutes. To change it:
+The default update interval is 5 minutes, which can be configured through the integration options:
 
-1. Edit `custom_components/oura/const.py`
-2. Modify the `UPDATE_INTERVAL` value:
-   ```python
-   UPDATE_INTERVAL: Final = timedelta(minutes=15)  # Change from 30 to 15
-   ```
-3. Restart Home Assistant
+1. Go to **Settings** → **Devices & Services**
+2. Find "Oura Ring" and click **CONFIGURE**
+3. Set your desired update interval (1-60 minutes)
+4. Click **SUBMIT**
 
- **Warning**: Shorter intervals may hit API rate limits.
+The integration will automatically reload with the new interval.
+
+⚠️ **Warning**: Shorter intervals may hit API rate limits.
 
 ### Debugging
 
@@ -294,10 +294,10 @@ If you're still experiencing issues:
 ## Next Steps
 
 Once installed:
-- [Create dashboard cards](README.md#example-dashboard-card)
-- [Set up automations](README.md#example-automation)
-- [Explore all available sensors](README.md#available-sensors)
+- [Create dashboard cards](../README.md#dashboard-examples)
+- [Set up automations](../README.md#usage)
+- [Explore all available sensors](../README.md#available-sensors)
 
 ---
 
-**Need more help?** Visit the [main README](README.md) or [open an issue](https://github.com/louispires/oura-v2-custom-component/issues).
+**Need more help?** Visit the [main README](../README.md) or [open an issue](https://github.com/louispires/oura-v2-custom-component/issues).

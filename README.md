@@ -490,7 +490,15 @@ This integration is built using modern Home Assistant patterns:
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please read our [Contributing Guide](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## Documentation
+
+- **[Installation Guide](docs/INSTALLATION.md)** - Detailed setup instructions
+- **[Quick Reference](docs/QUICKREF.md)** - Quick reference for common tasks
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Redirect URI Fix](docs/FIXING_REDIRECT_URI.md)** - OAuth redirect URI troubleshooting
+- **[Project Summary](docs/PROJECT_SUMMARY.md)** - Technical overview and architecture
 
 ## License
 
@@ -500,6 +508,7 @@ This project is licensed under the MIT License.
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
 - Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
+- Development assisted by: Claude Sonnet 4.5 (Anthropic AI)
 
 ## Sponsoring
 

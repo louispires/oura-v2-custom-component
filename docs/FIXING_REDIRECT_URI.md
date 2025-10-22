@@ -60,16 +60,12 @@ Your Oura application should look like this:
 - If single only: https://my.home-assistant.io/redirect/oauth
 
 **Scopes:** Select all:
--  email
--  personal  
--  daily
--  heartrate
--  workout
--  session
--  tag (optional)
--  spo2 (optional)
--  ring_configuration (optional)
--  stress (optional)
+- ✅ email
+- ✅ personal  
+- ✅ daily
+- ✅ heartrate
+- ✅ workout
+- ✅ session
 
 ### Step 4: After Updating Oura
 

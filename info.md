@@ -4,10 +4,11 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ## Features
 
- **OAuth2 Authentication** - Secure authentication using Home Assistant's application credentials
- **Comprehensive Data** - Access all Oura Ring data including sleep, readiness, and activity metrics
-� **Automatic Updates** - Data refreshes every 30 minutes
- **Modern Architecture** - Built following the latest Home Assistant standards
+✅ **OAuth2 Authentication** - Secure authentication using Home Assistant's application credentials
+✅ **Comprehensive Data** - Access all Oura Ring data including sleep, readiness, and activity metrics
+✅ **Configurable Updates** - Data refresh interval configurable from 1-60 minutes (default: 5 minutes)
+✅ **Modern Architecture** - Built following the latest Home Assistant standards
+✅ **Custom Branding** - Includes Oura Ring icon for visual identification
 
 ## Quick Start
 

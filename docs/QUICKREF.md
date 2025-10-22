@@ -108,9 +108,10 @@ Then restart Home Assistant.
 
 ## Update Schedule
 
-- **Default Interval**: 30 minutes
-- **First Update**: Within 30 minutes of setup
-- **Change Interval**: Edit `custom_components/oura/const.py`
+- **Default Interval**: 5 minutes (configurable)
+- **First Update**: Within 5 minutes of setup
+- **Change Interval**: Settings → Devices & Services → Oura Ring → CONFIGURE
+- **Range**: 1-60 minutes
 
 ## API Endpoints Used
 
@@ -247,7 +248,7 @@ template:
 ## Support Resources
 
 - **Installation Guide**: [INSTALLATION.md](INSTALLATION.md)
-- **Full README**: [README.md](README.md)
+- **Full README**: [README.md](../README.md)
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - **GitHub Issues**: https://github.com/louispires/oura-v2-custom-component/issues
 - **Home Assistant Docs**: https://www.home-assistant.io/integrations/
