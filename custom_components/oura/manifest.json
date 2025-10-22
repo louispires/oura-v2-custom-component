@@ -9,5 +9,6 @@
   "issue_tracker": "https://github.com/louispires/oura-v2-custom-component/issues",
   "requirements": [],
   "version": "1.0.0",
-  "integration_type": "service"
+  "integration_type": "service",
+  "icon": "mdi:ring"
 }
