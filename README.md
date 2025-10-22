@@ -50,7 +50,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 2. Click on "Integrations"
 3. Click the three dots in the top right corner
 4. Select "Custom repositories"
-5. Add this repository URL: `https://github.com/yourusername/oura-v2-custom-component`
+5. Add this repository URL: `https://github.com/louispires/oura-v2-custom-component`
 6. Select category: "Integration"
 7. Click "Add"
 8. Find "Oura Ring" in the integration list and click "Download"
@@ -101,23 +101,12 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 Once configured, sensors will appear under the Oura Ring integration. You can use these sensors in:
 
-- **Dashboards**: Display your sleep, readiness, and activity data
+- **Dashboards**: Display your sleep, readiness, and activity data with beautiful charts
 - **Automations**: Trigger actions based on your Oura Ring data
 - **Scripts**: Use sensor values in your scripts
 - **Templates**: Create custom sensors based on Oura data
 
-### Example Dashboard Card
-
-```yaml
-type: entities
-title: Oura Ring
-entities:
-  - entity: sensor.oura_sleep_score
-  - entity: sensor.oura_readiness_score
-  - entity: sensor.oura_activity_score
-  - entity: sensor.oura_total_sleep_duration
-  - entity: sensor.oura_steps
-```
+For dashboard examples using ApexCharts, see the [Dashboard Examples](#dashboard-examples) section below.
 
 ### Example Automation
 
@@ -136,10 +125,329 @@ automation:
 
 ## Data Update Frequency
 
-The integration polls the Oura API every 30 minutes to fetch the latest data. This interval is optimized to:
-- Minimize API calls
+The integration polls the Oura API with a configurable update interval (default: 5 minutes). You can configure this interval:
+
+1. Go to **Settings** → **Devices & Services**
+2. Find "Oura Ring" and click **CONFIGURE**
+3. Set your desired update interval (1-60 minutes)
+4. Click **SUBMIT**
+
+The integration will automatically reload with the new interval. The default 5-minute interval is optimized to:
 - Provide timely updates
+- Minimize API calls
 - Respect Oura's rate limits
+
+## Dashboard Examples
+
+### Using ApexCharts Card
+
+The [apexcharts-card](https://github.com/RomRider/apexcharts-card) is a highly customizable graphing card that works great with Oura data. Install it via HACS first.
+
+#### Scores Overview Card
+
+Track your sleep, readiness, and activity scores over the past week:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Oura Scores
+  show_states: true
+  colorize_states: true
+graph_span: 7d
+span:
+  end: day
+all_series_config:
+  type: column
+  opacity: 0.7
+  stroke_width: 2
+  group_by:
+    func: last
+    duration: 1d
+series:
+  - entity: sensor.oura_sleep_score
+    name: Sleep
+    color: '#5E97F6'
+  - entity: sensor.oura_readiness_score
+    name: Readiness
+    color: '#FFA600'
+  - entity: sensor.oura_activity_score
+    name: Activity
+    color: '#00D9FF'
+yaxis:
+  - min: 0
+    max: 100
+    apex_config:
+      tickAmount: 5
+```
+
+#### Sleep Analysis Card
+
+Detailed sleep breakdown with durations:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Sleep Analysis
+  show_states: true
+graph_span: 7d
+span:
+  end: day
+all_series_config:
+  type: column
+  opacity: 0.8
+  stroke_width: 0
+  group_by:
+    func: last
+    duration: 1d
+series:
+  - entity: sensor.oura_deep_sleep_duration
+    name: Deep
+    color: '#5E97F6'
+  - entity: sensor.oura_rem_sleep_duration
+    name: REM
+    color: '#9C27B0'
+  - entity: sensor.oura_light_sleep_duration
+    name: Light
+    color: '#00D9FF'
+  - entity: sensor.oura_awake_time
+    name: Awake
+    color: '#FF5252'
+yaxis:
+  - min: 0
+    apex_config:
+      tickAmount: 4
+      decimalsInFloat: 1
+```
+
+#### Sleep Efficiency Trend
+
+Monitor your sleep efficiency over time:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Sleep Efficiency
+  show_states: true
+graph_span: 14d
+span:
+  end: day
+series:
+  - entity: sensor.oura_sleep_efficiency
+    name: Efficiency
+    color: '#4CAF50'
+    stroke_width: 3
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+yaxis:
+  - min: 0
+    max: 100
+    apex_config:
+      tickAmount: 5
+```
+
+#### Heart Rate Monitoring
+
+Track resting heart rate and HRV:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Heart Health
+  show_states: true
+graph_span: 14d
+span:
+  end: day
+series:
+  - entity: sensor.oura_resting_heart_rate
+    name: Resting HR
+    color: '#E91E63'
+    stroke_width: 2
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+    yaxis_id: hr
+  - entity: sensor.oura_hrv_balance
+    name: HRV Balance
+    color: '#00BCD4'
+    stroke_width: 2
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+    yaxis_id: hrv
+yaxis:
+  - id: hr
+    min: 40
+    max: 80
+    apex_config:
+      tickAmount: 4
+      title:
+        text: BPM
+  - id: hrv
+    opposite: true
+    min: 0
+    max: 100
+    apex_config:
+      tickAmount: 4
+      title:
+        text: HRV Score
+```
+
+#### Activity Summary
+
+Daily steps and calories:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Daily Activity
+  show_states: true
+graph_span: 7d
+span:
+  end: day
+series:
+  - entity: sensor.oura_steps
+    name: Steps
+    color: '#4CAF50'
+    stroke_width: 2
+    type: column
+    opacity: 0.7
+    group_by:
+      func: last
+      duration: 1d
+    yaxis_id: steps
+  - entity: sensor.oura_active_calories
+    name: Calories
+    color: '#FF9800'
+    stroke_width: 2
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+    yaxis_id: calories
+yaxis:
+  - id: steps
+    apex_config:
+      tickAmount: 4
+      title:
+        text: Steps
+  - id: calories
+    opposite: true
+    apex_config:
+      tickAmount: 4
+      title:
+        text: Calories
+```
+
+#### Temperature Deviation
+
+Track body temperature trends:
+
+```yaml
+type: custom:apexcharts-card
+header:
+  show: true
+  title: Temperature Deviation
+  show_states: true
+graph_span: 30d
+span:
+  end: day
+series:
+  - entity: sensor.oura_temperature_deviation
+    name: Deviation
+    color: '#FF5722'
+    stroke_width: 2
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+yaxis:
+  - min: -2
+    max: 2
+    apex_config:
+      tickAmount: 4
+      decimalsInFloat: 1
+```
+
+### Simple Entity Cards
+
+For a quick overview without ApexCharts:
+
+```yaml
+type: entities
+title: Oura Ring Summary
+entities:
+  - entity: sensor.oura_sleep_score
+    name: Sleep Score
+  - entity: sensor.oura_readiness_score
+    name: Readiness Score
+  - entity: sensor.oura_activity_score
+    name: Activity Score
+  - type: divider
+  - entity: sensor.oura_total_sleep_duration
+    name: Total Sleep
+  - entity: sensor.oura_deep_sleep_duration
+    name: Deep Sleep
+  - entity: sensor.oura_rem_sleep_duration
+    name: REM Sleep
+  - type: divider
+  - entity: sensor.oura_steps
+    name: Steps Today
+  - entity: sensor.oura_active_calories
+    name: Active Calories
+```
+
+### Gauge Cards
+
+Visual representation of your scores:
+
+```yaml
+type: horizontal-stack
+cards:
+  - type: gauge
+    entity: sensor.oura_sleep_score
+    name: Sleep
+    needle: true
+    min: 0
+    max: 100
+    severity:
+      green: 85
+      yellow: 70
+      red: 0
+  - type: gauge
+    entity: sensor.oura_readiness_score
+    name: Readiness
+    needle: true
+    min: 0
+    max: 100
+    severity:
+      green: 85
+      yellow: 70
+      red: 0
+  - type: gauge
+    entity: sensor.oura_activity_score
+    name: Activity
+    needle: true
+    min: 0
+    max: 100
+    severity:
+      green: 85
+      yellow: 70
+      red: 0
+```
 
 ## Troubleshooting
 
@@ -196,7 +504,7 @@ This project is licensed under the MIT License.
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/yourusername/oura-v2-custom-component/issues) page
+1. Check the [Issues](https://github.com/louispires/oura-v2-custom-component/issues) page
 2. Create a new issue with detailed information
 3. Include relevant logs from Home Assistant
 

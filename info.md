@@ -40,4 +40,4 @@ Activity Score, Steps, Active/Total/Target Calories, High/Medium/Low Activity Ti
 
 ## Support
 
-For issues, questions, or feature requests, please visit the [GitHub repository](https://github.com/yourusername/oura-v2-custom-component/issues).
+For issues, questions, or feature requests, please visit the [GitHub repository](https://github.com/louispires/oura-v2-custom-component/issues).

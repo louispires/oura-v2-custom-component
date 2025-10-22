@@ -23,7 +23,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/oura-v2-custom-component.git
+git clone https://github.com/louispires/oura-v2-custom-component.git
 cd oura-v2-custom-component
 ```
 

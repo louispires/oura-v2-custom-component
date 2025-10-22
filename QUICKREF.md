@@ -249,7 +249,7 @@ template:
 - **Installation Guide**: [INSTALLATION.md](INSTALLATION.md)
 - **Full README**: [README.md](README.md)
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
-- **GitHub Issues**: https://github.com/yourusername/oura-v2-custom-component/issues
+- **GitHub Issues**: https://github.com/louispires/oura-v2-custom-component/issues
 - **Home Assistant Docs**: https://www.home-assistant.io/integrations/
 - **Oura API Docs**: https://cloud.ouraring.com/v2/docs
 
