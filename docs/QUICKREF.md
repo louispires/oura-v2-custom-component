@@ -71,6 +71,14 @@ sensor.oura_medium_activity_time
 sensor.oura_low_activity_time
 ```
 
+### Heart Rate Sensors
+```
+sensor.oura_current_heart_rate
+sensor.oura_average_heart_rate
+sensor.oura_min_heart_rate
+sensor.oura_max_heart_rate
+```
+
 ## Common Tasks
 
 ### Reload Integration

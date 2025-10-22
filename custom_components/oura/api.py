@@ -39,10 +39,11 @@ class OuraApiClient:
         end_date = datetime.now().date()
         start_date = end_date - timedelta(days=1)
         
-        sleep_data, readiness_data, activity_data = await asyncio.gather(
+        sleep_data, readiness_data, activity_data, heartrate_data = await asyncio.gather(
             self._async_get_sleep(start_date, end_date),
             self._async_get_readiness(start_date, end_date),
             self._async_get_activity(start_date, end_date),
+            self._async_get_heartrate(start_date, end_date),
             return_exceptions=True,
         )
 
@@ -53,11 +54,14 @@ class OuraApiClient:
             _LOGGER.error("Error fetching readiness data: %s", readiness_data)
         if isinstance(activity_data, Exception):
             _LOGGER.error("Error fetching activity data: %s", activity_data)
+        if isinstance(heartrate_data, Exception):
+            _LOGGER.error("Error fetching heart rate data: %s", heartrate_data)
 
         return {
             "sleep": sleep_data if not isinstance(sleep_data, Exception) else {},
             "readiness": readiness_data if not isinstance(readiness_data, Exception) else {},
             "activity": activity_data if not isinstance(activity_data, Exception) else {},
+            "heartrate": heartrate_data if not isinstance(heartrate_data, Exception) else {},
         }
 
     async def _async_get_sleep(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
@@ -84,6 +88,15 @@ class OuraApiClient:
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
+        }
+        return await self._async_get(url, params)
+
+    async def _async_get_heartrate(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
+        """Get heart rate data."""
+        url = f"{API_BASE_URL}/heartrate"
+        params = {
+            "start_datetime": f"{start_date.isoformat()}T00:00:00",
+            "end_datetime": f"{end_date.isoformat()}T23:59:59",
         }
         return await self._async_get(url, params)
 

@@ -119,7 +119,8 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 - Sleep data (10 sensors)
 - Readiness data (4 sensors)
 - Activity data (8 sensors)
-- Total: 22 sensors
+- Heart Rate data (4 sensors)
+- Total: 26 sensors
 
 ### Modern Architecture 
 - DataUpdateCoordinator pattern
@@ -164,6 +165,12 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 7. Medium Activity Time (minutes)
 8. Low Activity Time (minutes)
 
+### Heart Rate Sensors (4)
+1. Current Heart Rate (bpm) - Latest reading
+2. Average Heart Rate (bpm) - Recent average
+3. Minimum Heart Rate (bpm) - Recent minimum
+4. Maximum Heart Rate (bpm) - Recent maximum
+
 ## API Endpoints
 
 The integration uses these Oura v2 API endpoints:
@@ -171,13 +178,14 @@ The integration uses these Oura v2 API endpoints:
 - `https://api.ouraring.com/v2/usercollection/daily_sleep`
 - `https://api.ouraring.com/v2/usercollection/daily_readiness`
 - `https://api.ouraring.com/v2/usercollection/daily_activity`
+- `https://api.ouraring.com/v2/usercollection/heartrate`
 
 ## Update Mechanism
 
 - **Method**: DataUpdateCoordinator
 - **Default Interval**: 5 minutes (configurable via options flow)
 - **Range**: 1-60 minutes
-- **Parallel Fetching**: All three endpoints fetched concurrently
+- **Parallel Fetching**: All four endpoints fetched concurrently
 - **Error Handling**: Individual endpoint failures don't break others
 
 ## Installation Methods

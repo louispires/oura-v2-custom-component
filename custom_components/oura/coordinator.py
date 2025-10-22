@@ -84,4 +84,19 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     processed["met_min_medium"] = contributors.get("move_every_hour")
                     processed["met_min_low"] = contributors.get("recovery_time")
         
+        # Process heart rate data
+        if heartrate_data := data.get("heartrate", {}).get("data"):
+            if heartrate_data and len(heartrate_data) > 0:
+                # Get latest heart rate reading
+                latest_hr = heartrate_data[-1]
+                processed["current_heart_rate"] = latest_hr.get("bpm")
+                processed["heart_rate_timestamp"] = latest_hr.get("timestamp")
+                
+                # Calculate average heart rate from recent readings
+                recent_readings = [hr.get("bpm") for hr in heartrate_data[-10:] if hr.get("bpm")]
+                if recent_readings:
+                    processed["average_heart_rate"] = sum(recent_readings) / len(recent_readings)
+                    processed["min_heart_rate"] = min(recent_readings)
+                    processed["max_heart_rate"] = max(recent_readings)
+        
         return processed

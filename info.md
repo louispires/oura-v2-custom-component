@@ -39,6 +39,11 @@ Readiness Score, Temperature Deviation, Resting Heart Rate, HRV Balance
 ### Activity (8 sensors)
 Activity Score, Steps, Active/Total/Target Calories, High/Medium/Low Activity Time
 
+### Heart Rate (4 sensors)
+Current Heart Rate, Average Heart Rate, Minimum Heart Rate, Maximum Heart Rate
+
+**Total: 26 sensors** providing comprehensive health tracking
+
 ## Support
 
 For issues, questions, or feature requests, please visit the [GitHub repository](https://github.com/louispires/oura-v2-custom-component/issues).
