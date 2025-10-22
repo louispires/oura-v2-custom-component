@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "Choose Authentication Method"
+      }
+    },
+    "abort": {
+      "already_configured": "Account is already configured",
+      "oauth_error": "OAuth2 authentication error"
+    },
+    "create_entry": {
+      "default": "Successfully authenticated with Oura Ring"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Oura Ring Options",
+        "description": "Configure how often Oura Ring data is fetched.",
+        "data": {
+          "update_interval": "Update interval (minutes)"
+        }
+      }
+    }
+  }
+}

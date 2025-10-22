@@ -1,0 +1,13 @@
+{
+  "domain": "oura",
+  "name": "Oura Ring",
+  "codeowners": ["@louispires"],
+  "config_flow": true,
+  "dependencies": ["application_credentials"],
+  "documentation": "https://github.com/louispires/oura-v2-custom-component",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/louispires/oura-v2-custom-component/issues",
+  "requirements": [],
+  "version": "1.0.0",
+  "integration_type": "service"
+}
