@@ -1,6 +1,7 @@
 ﻿# Oura Ring v2 Custom Component for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow.svg)](https://buymeacoffee.com/louispires)
 
 A modern Home Assistant custom integration for Oura Ring using the v2 API with OAuth2 authentication.
 
@@ -497,8 +498,14 @@ This project is licensed under the MIT License.
 
 ## Credits
 
-- Original Oura Component: [johro897/oura-custom-component](https://github.com/johro897/oura-custom-component)
+- Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
 - Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
+
+## Sponsoring
+
+If this integration is helpful, feel free to [Buy Me a Coffee](https://buymeacoffee.com/louispires); or check other options on the Github ❤️ Sponsor link on the top of this page.
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/louispires)
 
 ## Support
 
