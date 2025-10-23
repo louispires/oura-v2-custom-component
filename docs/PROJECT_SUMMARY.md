@@ -116,11 +116,12 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 - Secure credential storage
 
 ### Data Collection 
-- Sleep data (10 sensors)
+- Sleep data (12 sensors)
 - Readiness data (4 sensors)
 - Activity data (8 sensors)
 - Heart Rate data (4 sensors)
-- Total: 26 sensors
+- HRV data (1 sensor)
+- Total: 29 sensors
 
 ### Modern Architecture 
 - DataUpdateCoordinator pattern
@@ -137,7 +138,7 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 
 ## Sensor Categories
 
-### Sleep Sensors (10)
+### Sleep Sensors (12)
 1. Sleep Score
 2. Total Sleep Duration (hours)
 3. Deep Sleep Duration (hours)
@@ -148,6 +149,8 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 8. Restfulness (%)
 9. Sleep Latency (minutes)
 10. Sleep Timing (score)
+11. Deep Sleep Percentage (%)
+12. REM Sleep Percentage (%)
 
 ### Readiness Sensors (4)
 1. Readiness Score
@@ -171,6 +174,9 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 3. Minimum Heart Rate (bpm) - Recent minimum
 4. Maximum Heart Rate (bpm) - Recent maximum
 
+### HRV Sensors (1)
+1. Average Sleep HRV (ms) - Heart rate variability during sleep
+
 ## API Endpoints
 
 The integration uses these Oura v2 API endpoints:
@@ -178,6 +184,8 @@ The integration uses these Oura v2 API endpoints:
 - `https://api.ouraring.com/v2/usercollection/daily_sleep`
 - `https://api.ouraring.com/v2/usercollection/daily_readiness`
 - `https://api.ouraring.com/v2/usercollection/daily_activity`
+- `https://api.ouraring.com/v2/usercollection/heartrate`
+- `https://api.ouraring.com/v2/usercollection/sleep`
 - `https://api.ouraring.com/v2/usercollection/heartrate`
 
 ## Update Mechanism

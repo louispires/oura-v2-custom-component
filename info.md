@@ -30,8 +30,8 @@ After installation:
 
 ## Available Sensors
 
-### Sleep (10 sensors)
-Sleep Score, Total/Deep/REM/Light Sleep Duration, Awake Time, Sleep Efficiency, Restfulness, Latency, Timing
+### Sleep (12 sensors)
+Sleep Score, Total/Deep/REM/Light Sleep Duration, Awake Time, Sleep Efficiency, Restfulness, Latency, Timing, Deep Sleep %, REM Sleep %
 
 ### Readiness (4 sensors)
 Readiness Score, Temperature Deviation, Resting Heart Rate, HRV Balance
@@ -42,7 +42,10 @@ Activity Score, Steps, Active/Total/Target Calories, High/Medium/Low Activity Ti
 ### Heart Rate (4 sensors)
 Current Heart Rate, Average Heart Rate, Minimum Heart Rate, Maximum Heart Rate
 
-**Total: 26 sensors** providing comprehensive health tracking
+### HRV (1 sensor)
+Average Sleep HRV
+
+**Total: 29 sensors** providing comprehensive health tracking
 
 ## Support
 

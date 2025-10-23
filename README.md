@@ -15,7 +15,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ## Available Sensors
 
-### Sleep Sensors (10)
+### Sleep Sensors (12)
 - Sleep Score
 - Total Sleep Duration
 - Deep Sleep Duration
@@ -26,12 +26,16 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - Restfulness
 - Sleep Latency
 - Sleep Timing
+- Deep Sleep Percentage
+- REM Sleep Percentage
 
 ### Readiness Sensors (4)
 - Readiness Score
 - Temperature Deviation
-- Resting Heart Rate (daily average)
-- HRV Balance
+- Resting Heart Rate Score (contribution score, not actual BPM)*
+- HRV Balance Score (contribution score, not actual HRV)*
+
+**Note**: Sensors marked with * may be unavailable if Oura doesn't have sufficient data to calculate the contributor score.
 
 ### Activity Sensors (8)
 - Activity Score
@@ -49,7 +53,10 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - Minimum Heart Rate (from recent readings)
 - Maximum Heart Rate (from recent readings)
 
-**Total: 26 sensors**
+### HRV Sensors (1)
+- Average Sleep HRV (heart rate variability during sleep)
+
+**Total: 29 sensors**
 
 ## Installation
 
@@ -262,20 +269,20 @@ yaxis:
 
 #### Heart Rate Monitoring
 
-Track resting heart rate and HRV:
+Track heart rate scores and HRV:
 
 ```yaml
 type: custom:apexcharts-card
 header:
   show: true
-  title: Heart Health
+  title: Heart Health Scores
   show_states: true
 graph_span: 14d
 span:
   end: day
 series:
   - entity: sensor.oura_resting_heart_rate
-    name: Resting HR
+    name: Resting HR Score
     color: '#E91E63'
     stroke_width: 2
     type: line
@@ -283,9 +290,9 @@ series:
     group_by:
       func: last
       duration: 1d
-    yaxis_id: hr
+    yaxis_id: scores
   - entity: sensor.oura_hrv_balance
-    name: HRV Balance
+    name: HRV Balance Score
     color: '#00BCD4'
     stroke_width: 2
     type: line
@@ -293,23 +300,15 @@ series:
     group_by:
       func: last
       duration: 1d
-    yaxis_id: hrv
+    yaxis_id: scores
 yaxis:
-  - id: hr
-    min: 40
-    max: 80
-    apex_config:
-      tickAmount: 4
-      title:
-        text: BPM
-  - id: hrv
-    opposite: true
+  - id: scores
     min: 0
     max: 100
     apex_config:
-      tickAmount: 4
+      tickAmount: 5
       title:
-        text: HRV Score
+        text: Score
 ```
 
 #### Activity Summary
@@ -475,8 +474,23 @@ If some sensors are not appearing:
 
 1. Ensure your Oura Ring is synced with the Oura app
 2. Check that you have recent data in the Oura app
-3. Wait for the next update cycle (30 minutes)
+3. Wait for the next update cycle (default: 5 minutes)
 4. Check Home Assistant logs for errors
+
+### Unavailable Sensors
+
+Some sensors may show as "unavailable" when Oura doesn't have sufficient data:
+
+- **Resting Heart Rate Score**: Requires sufficient heart rate measurements during rest periods
+- **HRV Balance Score**: Requires sufficient HRV data collection (usually from sleep)
+
+This is normal behavior, especially:
+- In the first few days of wearing your ring
+- After periods of not wearing the ring
+- If you haven't had sufficient sleep for HRV measurements
+- During data processing delays
+
+These sensors will automatically become available once Oura collects and processes the necessary data.
 
 ### API Rate Limiting
 

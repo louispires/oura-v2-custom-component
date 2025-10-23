@@ -49,6 +49,8 @@ sensor.oura_sleep_efficiency
 sensor.oura_restfulness
 sensor.oura_sleep_latency
 sensor.oura_sleep_timing
+sensor.oura_deep_sleep_percentage
+sensor.oura_rem_sleep_percentage
 ```
 
 ### Readiness Sensors
@@ -77,6 +79,11 @@ sensor.oura_current_heart_rate
 sensor.oura_average_heart_rate
 sensor.oura_min_heart_rate
 sensor.oura_max_heart_rate
+```
+
+### HRV Sensors
+```
+sensor.oura_average_sleep_hrv
 ```
 
 ## Common Tasks

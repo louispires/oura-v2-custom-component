@@ -39,12 +39,14 @@ SENSOR_TYPES: Final = {
     "restfulness": {"name": "Restfulness", "icon": "mdi:bed", "unit": "%", "device_class": None, "state_class": "measurement"},
     "sleep_latency": {"name": "Sleep Latency", "icon": "mdi:timer", "unit": "min", "device_class": "duration", "state_class": "measurement"},
     "sleep_timing": {"name": "Sleep Timing", "icon": "mdi:clock-check", "unit": None, "device_class": None, "state_class": "measurement"},
+    "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
+    "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
     
     # Readiness sensors
     "readiness_score": {"name": "Readiness Score", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement"},
     "temperature_deviation": {"name": "Temperature Deviation", "icon": "mdi:thermometer", "unit": "°C", "device_class": "temperature", "state_class": "measurement"},
-    "resting_heart_rate": {"name": "Resting Heart Rate", "icon": "mdi:heart", "unit": "bpm", "device_class": None, "state_class": "measurement"},
-    "hrv_balance": {"name": "HRV Balance", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement"},
+    "resting_heart_rate": {"name": "Resting Heart Rate Score", "icon": "mdi:heart", "unit": None, "device_class": None, "state_class": "measurement"},
+    "hrv_balance": {"name": "HRV Balance Score", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement"},
     
     # Activity sensors
     "activity_score": {"name": "Activity Score", "icon": "mdi:run", "unit": None, "device_class": None, "state_class": "measurement"},
@@ -61,4 +63,7 @@ SENSOR_TYPES: Final = {
     "average_heart_rate": {"name": "Average Heart Rate", "icon": "mdi:heart", "unit": "bpm", "device_class": None, "state_class": "measurement"},
     "min_heart_rate": {"name": "Minimum Heart Rate", "icon": "mdi:heart-minus", "unit": "bpm", "device_class": None, "state_class": "measurement"},
     "max_heart_rate": {"name": "Maximum Heart Rate", "icon": "mdi:heart-plus", "unit": "bpm", "device_class": None, "state_class": "measurement"},
+    
+    # HRV sensors (from detailed sleep endpoint)
+    "average_sleep_hrv": {"name": "Average Sleep HRV", "icon": "mdi:heart-pulse", "unit": "ms", "device_class": None, "state_class": "measurement"},
 }
