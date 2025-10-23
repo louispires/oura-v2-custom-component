@@ -45,3 +45,4 @@ htmlcov/
 *.db-wal
 home-assistant.log
 home-assistant_v2.db
+release-notes.md

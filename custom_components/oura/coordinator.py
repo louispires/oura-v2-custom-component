@@ -77,6 +77,8 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     processed["awake_time"] = awake / 3600
                 if latency := latest_sleep_detail.get("latency"):
                     processed["sleep_latency"] = latency / 60  # Convert to minutes
+                if time_in_bed := latest_sleep_detail.get("time_in_bed"):
+                    processed["time_in_bed"] = time_in_bed / 3600  # Convert to hours
                 
                 # Calculate sleep stage percentages
                 if total_sleep_seconds and total_sleep_seconds > 0:

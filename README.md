@@ -15,7 +15,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ## Available Sensors
 
-### Sleep Sensors (12)
+### Sleep Sensors (13)
 - Sleep Score
 - Total Sleep Duration
 - Deep Sleep Duration
@@ -28,6 +28,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - Sleep Timing
 - Deep Sleep Percentage
 - REM Sleep Percentage
+- Time in Bed
 
 ### Readiness Sensors (4)
 - Readiness Score
@@ -56,7 +57,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 ### HRV Sensors (1)
 - Average Sleep HRV (heart rate variability during sleep)
 
-**Total: 29 sensors**
+**Total: 30 sensors**
 
 ## Installation
 

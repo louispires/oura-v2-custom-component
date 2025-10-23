@@ -116,12 +116,12 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 - Secure credential storage
 
 ### Data Collection 
-- Sleep data (12 sensors)
+- Sleep data (13 sensors)
 - Readiness data (4 sensors)
 - Activity data (8 sensors)
 - Heart Rate data (4 sensors)
 - HRV data (1 sensor)
-- Total: 29 sensors
+- Total: 30 sensors
 
 ### Modern Architecture 
 - DataUpdateCoordinator pattern
@@ -138,7 +138,7 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 
 ## Sensor Categories
 
-### Sleep Sensors (12)
+### Sleep Sensors (13)
 1. Sleep Score
 2. Total Sleep Duration (hours)
 3. Deep Sleep Duration (hours)
@@ -151,6 +151,7 @@ This is a complete, production-ready Home Assistant custom integration for Oura 
 10. Sleep Timing (score)
 11. Deep Sleep Percentage (%)
 12. REM Sleep Percentage (%)
+13. Time in Bed (hours)
 
 ### Readiness Sensors (4)
 1. Readiness Score

@@ -41,6 +41,7 @@ SENSOR_TYPES: Final = {
     "sleep_timing": {"name": "Sleep Timing", "icon": "mdi:clock-check", "unit": None, "device_class": None, "state_class": "measurement"},
     "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
     "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
+    "time_in_bed": {"name": "Time in Bed", "icon": "mdi:bed-clock", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
     
     # Readiness sensors
     "readiness_score": {"name": "Readiness Score", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement"},

@@ -51,6 +51,7 @@ sensor.oura_sleep_latency
 sensor.oura_sleep_timing
 sensor.oura_deep_sleep_percentage
 sensor.oura_rem_sleep_percentage
+sensor.oura_time_in_bed
 ```
 
 ### Readiness Sensors
