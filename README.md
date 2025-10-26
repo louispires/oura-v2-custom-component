@@ -164,7 +164,10 @@ The [apexcharts-card](https://github.com/RomRider/apexcharts-card) is a highly c
 #### Scores Overview Card
 
 Track your sleep, readiness, and activity scores over the past week:
-
+<img width="947" height="804" alt="image" src="https://github.com/user-attachments/assets/13fafd56-db90-40a5-9f3f-99c12ee74707" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: custom:apexcharts-card
 header:
@@ -178,71 +181,149 @@ span:
 all_series_config:
   type: column
   opacity: 0.7
-  stroke_width: 2
+  stroke_width: 8
   group_by:
     func: last
     duration: 1d
 series:
   - entity: sensor.oura_sleep_score
     name: Sleep
-    color: '#5E97F6'
+    color: "#5E97F6"
   - entity: sensor.oura_readiness_score
     name: Readiness
-    color: '#FFA600'
+    color: "#FFA600"
   - entity: sensor.oura_activity_score
     name: Activity
-    color: '#00D9FF'
+    color: "#00D9FF"
 yaxis:
   - min: 0
     max: 100
     apex_config:
       tickAmount: 5
 ```
+</details>
 
 #### Sleep Analysis Card
 
 Detailed sleep breakdown with durations:
+<img width="2904" height="1243" alt="image" src="https://github.com/user-attachments/assets/a9731cbe-41f9-4d83-8648-98befd82f344" />
+<details>
+<summary>yaml</summary>
 
 ```yaml
 type: custom:apexcharts-card
+graph_span: 7d
 header:
   show: true
-  title: Sleep Analysis
   show_states: true
-graph_span: 7d
-span:
-  end: day
-all_series_config:
-  type: column
-  opacity: 0.8
-  stroke_width: 0
-  group_by:
-    func: last
-    duration: 1d
+  colorize_states: true
+  title: Sleep
+  standard_format: true
+yaxis:
+  - id: left
+    opposite: false
+    min: 0
+    max: 10
+    apex_config:
+      title:
+        text: Total Sleep
+  - id: right
+    opposite: true
+    min: 0
+    max: 8
+    apex_config:
+      title:
+        text: Breakdown
 series:
-  - entity: sensor.oura_deep_sleep_duration
-    name: Deep
-    color: '#5E97F6'
+  - entity: sensor.oura_sleep_score
+    name: Score
+    show:
+      in_chart: false
+    color: white
+  - entity: sensor.oura_average_heart_rate
+    name: Avg HR
+    show:
+      in_chart: false
+  - entity: sensor.oura_minimum_heart_rate
+    name: Lowest HR
+    show:
+      in_chart: false
+  - entity: sensor.oura_time_in_bed
+    name: In Bed
+    color: grey
+    type: area
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: left
+    group_by:
+      duration: 1d
+      func: last
+  - entity: sensor.oura_total_sleep_duration
+    name: Total Sleep
+    color: purple
+    type: area
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: left
+    group_by:
+      duration: 1d
+      func: last
   - entity: sensor.oura_rem_sleep_duration
     name: REM
-    color: '#9C27B0'
+    color: "#20bf6b"
+    type: column
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: right
+    group_by:
+      duration: 1d
+      func: last
+  - entity: sensor.oura_deep_sleep_duration
+    name: Deep
+    color: "#45aaf2"
+    type: column
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: right
+    group_by:
+      duration: 1d
+      func: last
   - entity: sensor.oura_light_sleep_duration
     name: Light
-    color: '#00D9FF'
+    color: "#fed330"
+    type: column
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: right
+    group_by:
+      duration: 1d
+      func: last
   - entity: sensor.oura_awake_time
     name: Awake
-    color: '#FF5252'
-yaxis:
-  - min: 0
-    apex_config:
-      tickAmount: 4
-      decimalsInFloat: 1
+    color: "#fc5c65"
+    type: column
+    show:
+      in_chart: true
+      in_header: false
+    yaxis_id: right
+    group_by:
+      duration: 1d
+      func: last
 ```
+</details>
 
 #### Sleep Efficiency Trend
 
 Monitor your sleep efficiency over time:
-
+<img width="945" height="797" alt="image" src="https://github.com/user-attachments/assets/23d9d8cd-44ce-4944-8d21-292829208123" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: custom:apexcharts-card
 header:
@@ -268,55 +349,81 @@ yaxis:
     apex_config:
       tickAmount: 5
 ```
+</details>
 
 #### Heart Rate Monitoring
 
 Track heart rate scores and HRV:
-
+<img width="947" height="800" alt="image" src="https://github.com/user-attachments/assets/57401ffc-988c-4912-a71a-a81f686739f5" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: custom:apexcharts-card
 header:
   show: true
-  title: Heart Health Scores
+  title: Heart Health
   show_states: true
-graph_span: 14d
+graph_span: 7d
 span:
   end: day
 series:
   - entity: sensor.oura_resting_heart_rate
-    name: Resting HR Score
-    color: '#E91E63'
+    name: Resting HR
+    color: "#E91E63"
     stroke_width: 2
     type: line
     curve: smooth
     group_by:
       func: last
       duration: 1d
-    yaxis_id: scores
+    yaxis_id: hr
   - entity: sensor.oura_hrv_balance
-    name: HRV Balance Score
-    color: '#00BCD4'
+    name: HRV Balance
+    color: "#00BCD4"
     stroke_width: 2
     type: line
     curve: smooth
     group_by:
       func: last
       duration: 1d
-    yaxis_id: scores
+    yaxis_id: hrv
+  - entity: sensor.oura_average_sleep_hrv
+    name: Sleep HRV
+    color: "#287233"
+    stroke_width: 2
+    type: line
+    curve: smooth
+    group_by:
+      func: last
+      duration: 1d
+    yaxis_id: hrv
 yaxis:
-  - id: scores
+  - id: hr
+    min: 40
+    max: 80
+    apex_config:
+      tickAmount: 4
+      title:
+        text: BPM
+  - id: hrv
+    opposite: true
     min: 0
     max: 100
     apex_config:
-      tickAmount: 5
+      tickAmount: 4
       title:
-        text: Score
+        text: HRV
 ```
+</details>
 
 #### Activity Summary
 
 Daily steps and calories:
-
+<img width="938" height="803" alt="image" src="https://github.com/user-attachments/assets/675d862e-47dd-4772-a1c9-dab482d145ce" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: custom:apexcharts-card
 header:
@@ -360,11 +467,15 @@ yaxis:
       title:
         text: Calories
 ```
+</details>
 
 #### Temperature Deviation
 
 Track body temperature trends:
-
+<img width="942" height="800" alt="image" src="https://github.com/user-attachments/assets/bb79c360-90c9-45b0-ac33-a96f7cc2ae9c" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: custom:apexcharts-card
 header:
@@ -391,39 +502,66 @@ yaxis:
       tickAmount: 4
       decimalsInFloat: 1
 ```
+</details>
 
 ### Simple Entity Cards
 
 For a quick overview without ApexCharts:
-
+<img width="946" height="1471" alt="image" src="https://github.com/user-attachments/assets/ac3462db-f6a0-417d-b1f4-cca43335e4cd" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: entities
 title: Oura Ring Summary
 entities:
   - entity: sensor.oura_sleep_score
+    secondary_info: last-changed
     name: Sleep Score
   - entity: sensor.oura_readiness_score
+    secondary_info: last-changed
     name: Readiness Score
   - entity: sensor.oura_activity_score
+    secondary_info: last-changed
     name: Activity Score
   - type: divider
   - entity: sensor.oura_total_sleep_duration
+    secondary_info: last-changed
     name: Total Sleep
+  - entity: sensor.oura_time_in_bed
+    name: Time in Bed
+    secondary_info: last-changed
   - entity: sensor.oura_deep_sleep_duration
+    secondary_info: last-changed
     name: Deep Sleep
   - entity: sensor.oura_rem_sleep_duration
+    secondary_info: last-changed
     name: REM Sleep
   - type: divider
   - entity: sensor.oura_steps
+    secondary_info: last-changed
     name: Steps Today
   - entity: sensor.oura_active_calories
+    secondary_info: last-changed
     name: Active Calories
+  - entity: sensor.oura_current_heart_rate
+    secondary_info: last-changed
+  - entity: sensor.oura_average_heart_rate
+    secondary_info: last-changed
+  - entity: sensor.oura_minimum_heart_rate
+    secondary_info: last-changed
+  - entity: sensor.oura_maximum_heart_rate
+    secondary_info: last-changed
 ```
+</details>
 
 ### Gauge Cards
 
 Visual representation of your scores:
-
+<img width="905" height="228" alt="image" src="https://github.com/user-attachments/assets/bc8666fd-856c-4fd5-b05e-68e587b6b2ce" />
+<details>
+<summary>yaml</summary>
+   
 ```yaml
 type: horizontal-stack
 cards:
@@ -458,6 +596,7 @@ cards:
       yellow: 70
       red: 0
 ```
+</details>
 
 ## Troubleshooting
 
