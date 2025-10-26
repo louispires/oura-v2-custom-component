@@ -64,6 +64,10 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ### HACS Installation (Recommended)
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=louispires&repository=oura-v2-custom-component&category=integration)
+
+**Click the button above** to add this repository to HACS, or follow these manual steps:
+
 1. Open HACS in your Home Assistant instance
 2. Click on "Integrations"
 3. Click the three dots in the top right corner
