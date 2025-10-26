@@ -1,8 +1,5 @@
 {
   "name": "Oura Ring",
   "render_readme": true,
-  "domains": ["oura"],
-  "iot_class": "Cloud Polling",
-  "homeassistant": "2024.1.0",
-  "icon": "mdi:ring"
+  "homeassistant": "2024.1.0"
 }
