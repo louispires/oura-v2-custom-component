@@ -9,7 +9,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import OuraApiClient
-from .const import DOMAIN, DEFAULT_UPDATE_INTERVAL, CONF_UPDATE_INTERVAL
+from .const import DOMAIN, DEFAULT_UPDATE_INTERVAL
+from .statistics import async_import_statistics
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,14 +32,53 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(minutes=update_interval_minutes),
         )
         self.api_client = api_client
+        self.historical_data_loaded = False
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Update data via API."""
         try:
-            data = await self.api_client.async_get_data()
+            # For regular updates, only fetch 1 day of data
+            data = await self.api_client.async_get_data(days_back=1)
             return self._process_data(data)
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
+    
+    async def async_load_historical_data(self, days: int) -> None:
+        """Load historical data on first setup.
+        
+        Args:
+            days: Number of days of historical data to fetch
+        """
+        try:
+            _LOGGER.info("Fetching %d days of historical Oura data...", days)
+            historical_data = await self.api_client.async_get_data(days_back=days)
+            
+            _LOGGER.debug("Historical data fetched. Keys: %s", list(historical_data.keys()))
+            
+            # Import historical data as long-term statistics
+            _LOGGER.info("Importing historical data as long-term statistics...")
+            try:
+                await async_import_statistics(self.hass, historical_data)
+                _LOGGER.info("Statistics import completed successfully")
+            except Exception as stats_err:
+                _LOGGER.error("Failed to import statistics: %s", stats_err, exc_info=True)
+                raise
+            
+            # Process and store the LATEST day's data for current sensor states
+            processed_data = self._process_data(historical_data)
+            
+            _LOGGER.debug("Processed current data. Keys: %s", list(processed_data.keys()))
+            
+            # Update the coordinator's data with current information
+            self.data = processed_data
+            self.historical_data_loaded = True
+            
+            _LOGGER.info("Successfully loaded %d days of historical data and %d current metrics", 
+                        days, len(processed_data))
+        except Exception as err:
+            _LOGGER.error("Failed to fetch historical data: %s", err, exc_info=True)
+            _LOGGER.warning("Will continue with daily updates only")
+            raise
 
     def _process_data(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process the raw API data into sensor values."""

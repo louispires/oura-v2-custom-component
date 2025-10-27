@@ -9,7 +9,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow
 
 from .api import OuraApiClient
-from .const import DOMAIN, CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL
+from .const import (
+    DOMAIN,
+    CONF_UPDATE_INTERVAL,
+    CONF_HISTORICAL_DAYS,
+    DEFAULT_UPDATE_INTERVAL,
+    DEFAULT_HISTORICAL_DAYS,
+)
 from .coordinator import OuraDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -49,9 +55,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     update_interval = entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     coordinator = OuraDataUpdateCoordinator(hass, api_client, update_interval)
 
+    # Check if this is the first setup (no historical data loaded yet)
+    # We'll use a flag stored in hass.data to track this
+    hass.data.setdefault(DOMAIN, {})
+    is_first_setup = entry.entry_id not in hass.data[DOMAIN]
+    
+    _LOGGER.info("Integration setup - Entry ID: %s, First setup: %s", entry.entry_id, is_first_setup)
+    
+    if is_first_setup:
+        # Get historical days from options, or use default
+        historical_days = entry.options.get(CONF_HISTORICAL_DAYS, DEFAULT_HISTORICAL_DAYS)
+        
+        _LOGGER.info("First setup detected - will load %d days of historical data", historical_days)
+        
+        # Load historical data before first refresh
+        try:
+            await coordinator.async_load_historical_data(historical_days)
+            _LOGGER.info("Historical data load completed successfully")
+        except Exception as err:
+            _LOGGER.error("Failed to load historical data: %s", err, exc_info=True)
+            # Continue anyway - regular updates will still work
+    else:
+        _LOGGER.info("Not first setup - skipping historical data load")
+    
+    # Do the first refresh (or subsequent refreshes)
     await coordinator.async_config_entry_first_refresh()
 
-    hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
