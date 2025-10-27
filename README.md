@@ -93,7 +93,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 4. Fill in the application details:
    - **Application Name**: Home Assistant
    - **Application Website**: Your Home Assistant URL
-   - **Redirect URI**: `https://your-home-assistant-url/auth/external/callback`
+   - **Redirect URI**: `https://my.home-assistant.io/redirect/oauth`
 5. Save the **Client ID** and **Client Secret**
 
 ### Step 2: Configure Application Credentials in Home Assistant
