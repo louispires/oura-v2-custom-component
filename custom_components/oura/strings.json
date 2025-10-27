@@ -17,9 +17,14 @@
     "step": {
       "init": {
         "title": "Oura Ring Options",
-        "description": "Configure how often Oura Ring data is fetched.",
+        "description": "Configure how often Oura Ring data is fetched and how many days of historical data to load on first setup.",
         "data": {
-          "update_interval": "Update interval (minutes)"
+          "update_interval": "Update interval (minutes)",
+          "historical_days": "Historical days to load (1-90, only applies on first setup)"
+        },
+        "data_description": {
+          "update_interval": "How often to fetch new data from Oura API (1-60 minutes)",
+          "historical_days": "Number of days of historical data to import as statistics when first adding the integration (1-90 days)"
         }
       }
     }

@@ -34,10 +34,16 @@ class OuraApiClient:
             self._client_session = async_get_clientsession(self.hass)
         return self._client_session
 
-    async def async_get_data(self) -> dict[str, Any]:
-        """Get data from Oura API."""
+    async def async_get_data(self, days_back: int = 1) -> dict[str, Any]:
+        """Get data from Oura API.
+        
+        Args:
+            days_back: Number of days of historical data to fetch (default: 1)
+        """
         end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=1)
+        start_date = end_date - timedelta(days=days_back)
+        
+        _LOGGER.debug("Fetching Oura data from %s to %s (%d days)", start_date, end_date, days_back)
         
         sleep_data, readiness_data, activity_data, heartrate_data, sleep_detail_data = await asyncio.gather(
             self._async_get_sleep(start_date, end_date),
@@ -96,13 +102,55 @@ class OuraApiClient:
         return await self._async_get(url, params)
 
     async def _async_get_heartrate(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
-        """Get heart rate data."""
+        """Get heart rate data.
+        
+        Note: The heartrate endpoint has a maximum range of 7 days.
+        For historical data requests, we'll batch the requests.
+        """
         url = f"{API_BASE_URL}/heartrate"
-        params = {
-            "start_datetime": f"{start_date.isoformat()}T00:00:00",
-            "end_datetime": f"{end_date.isoformat()}T23:59:59",
-        }
-        return await self._async_get(url, params)
+        
+        # Calculate the number of days in the range
+        days_range = (end_date - start_date).days
+        
+        # If range is > 7 days, batch the requests
+        if days_range > 7:
+            _LOGGER.debug("Heart rate range is %d days, batching into 7-day chunks", days_range)
+            all_data = []
+            current_start = start_date
+            
+            while current_start < end_date:
+                current_end = min(current_start + timedelta(days=7), end_date)
+                params = {
+                    "start_datetime": f"{current_start.isoformat()}T00:00:00",
+                    "end_datetime": f"{current_end.isoformat()}T23:59:59",
+                }
+                
+                try:
+                    batch_data = await self._async_get(url, params)
+                    if batch_data and "data" in batch_data:
+                        all_data.extend(batch_data["data"])
+                except Exception as err:
+                    _LOGGER.warning(
+                        "Failed to fetch heart rate data for %s to %s: %s",
+                        current_start, current_end, err
+                    )
+                
+                current_start = current_end + timedelta(days=1)
+            
+            return {"data": all_data}
+        else:
+            # Range is 7 days or less, single request
+            params = {
+                "start_datetime": f"{start_date.isoformat()}T00:00:00",
+                "end_datetime": f"{end_date.isoformat()}T23:59:59",
+            }
+            
+            try:
+                return await self._async_get(url, params)
+            except Exception as err:
+                _LOGGER.error("Heart rate endpoint failed: %s", err)
+                # Return empty data instead of failing completely
+                return {"data": []}
 
     async def _async_get_sleep_detail(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
         """Get detailed sleep data including HRV."""

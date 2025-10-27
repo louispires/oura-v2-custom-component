@@ -13,9 +13,13 @@ from .const import (
     DOMAIN,
     OAUTH2_SCOPES,
     CONF_UPDATE_INTERVAL,
+    CONF_HISTORICAL_DAYS,
     DEFAULT_UPDATE_INTERVAL,
+    DEFAULT_HISTORICAL_DAYS,
     MIN_UPDATE_INTERVAL,
     MAX_UPDATE_INTERVAL,
+    MIN_HISTORICAL_DAYS,
+    MAX_HISTORICAL_DAYS,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -84,6 +88,15 @@ class OuraOptionsFlowHandler(config_entries.OptionsFlow):
                     ): vol.All(
                         vol.Coerce(int),
                         vol.Range(min=MIN_UPDATE_INTERVAL, max=MAX_UPDATE_INTERVAL),
+                    ),
+                    vol.Optional(
+                        CONF_HISTORICAL_DAYS,
+                        default=self.config_entry.options.get(
+                            CONF_HISTORICAL_DAYS, DEFAULT_HISTORICAL_DAYS
+                        ),
+                    ): vol.All(
+                        vol.Coerce(int),
+                        vol.Range(min=MIN_HISTORICAL_DAYS, max=MAX_HISTORICAL_DAYS),
                     ),
                 }
             ),
