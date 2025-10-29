@@ -36,18 +36,18 @@ MAX_HISTORICAL_DAYS: Final = 90  # Maximum 90 days (Oura API limit)
 SENSOR_TYPES: Final = {
     # Sleep sensors
     "sleep_score": {"name": "Sleep Score", "icon": "mdi:sleep", "unit": None, "device_class": None, "state_class": "measurement"},
-    "total_sleep_duration": {"name": "Total Sleep Duration", "icon": "mdi:clock-outline", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
-    "deep_sleep_duration": {"name": "Deep Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
-    "rem_sleep_duration": {"name": "REM Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
-    "light_sleep_duration": {"name": "Light Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
-    "awake_time": {"name": "Awake Time", "icon": "mdi:eye", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
+    "total_sleep_duration": {"name": "Total Sleep Duration", "icon": "mdi:clock-outline", "unit": "h", "device_class": "duration", "state_class": "measurement"},
+    "deep_sleep_duration": {"name": "Deep Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "measurement"},
+    "rem_sleep_duration": {"name": "REM Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "measurement"},
+    "light_sleep_duration": {"name": "Light Sleep Duration", "icon": "mdi:sleep", "unit": "h", "device_class": "duration", "state_class": "measurement"},
+    "awake_time": {"name": "Awake Time", "icon": "mdi:eye", "unit": "h", "device_class": "duration", "state_class": "measurement"},
     "sleep_efficiency": {"name": "Sleep Efficiency", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
     "restfulness": {"name": "Restfulness", "icon": "mdi:bed", "unit": "%", "device_class": None, "state_class": "measurement"},
     "sleep_latency": {"name": "Sleep Latency", "icon": "mdi:timer", "unit": "min", "device_class": "duration", "state_class": "measurement"},
     "sleep_timing": {"name": "Sleep Timing", "icon": "mdi:clock-check", "unit": None, "device_class": None, "state_class": "measurement"},
     "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
     "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement"},
-    "time_in_bed": {"name": "Time in Bed", "icon": "mdi:bed-clock", "unit": "h", "device_class": "duration", "state_class": "total_increasing"},
+    "time_in_bed": {"name": "Time in Bed", "icon": "mdi:bed-clock", "unit": "h", "device_class": "duration", "state_class": "measurement"},
     
     # Readiness sensors
     "readiness_score": {"name": "Readiness Score", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement"},
