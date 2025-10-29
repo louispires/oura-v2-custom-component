@@ -59,7 +59,32 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 ### HRV Sensors (1)
 - Average Sleep HRV (heart rate variability during sleep)
 
-**Total: 30 sensors**
+### Stress Sensors (3)
+- Stress High Duration
+- Recovery High Duration
+- Stress Day Summary
+
+### Resilience Sensors (4) - *Requires specific Oura features*
+- Resilience Level
+- Sleep Recovery Score
+- Daytime Recovery Score
+- Stress Resilience Score
+
+### SpO2 Sensors (2) - *Gen3/Ring4 only*
+- SpO2 Average
+- Breathing Disturbance Index
+
+### Fitness Sensors (2) - *Requires specific Oura features*
+- VO2 Max
+- Cardiovascular Age
+
+### Sleep Optimization Sensors (2)
+- Optimal Bedtime Start
+- Optimal Bedtime End
+
+**Total: 43 sensors**
+
+**Note**: Some sensors marked with feature requirements may return 401 Unauthorized errors if your Oura account/ring doesn't have access to those features. This is normal - the integration will continue to work with the sensors that are available to you.
 
 ## Installation
 

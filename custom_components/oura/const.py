@@ -19,7 +19,10 @@ OAUTH2_SCOPES: Final = [
     "heartrate",
     "workout",
     "session",
-    "spo2Daily",  # SpO2 Average recorded during sleep (officially documented)
+    "stress",
+    "resilience",
+    "spo2Daily",
+    "cardiovascular_age"
 ]
 API_BASE_URL: Final = "https://api.ouraring.com/v2/usercollection"
 
@@ -76,9 +79,9 @@ SENSOR_TYPES: Final = {
     "average_sleep_hrv": {"name": "Average Sleep HRV", "icon": "mdi:heart-pulse", "unit": "ms", "device_class": None, "state_class": "measurement"},
     
     # Stress sensors
-    "stress_high_duration": {"name": "Stress High Duration", "icon": "mdi:stress", "unit": "min", "device_class": "duration", "state_class": "measurement"},
-    "recovery_high_duration": {"name": "Recovery High Duration", "icon": "mdi:lung", "unit": "min", "device_class": "duration", "state_class": "measurement"},
-    "stress_day_summary": {"name": "Stress Day Summary", "icon": "mdi:stress", "unit": None, "device_class": None, "state_class": None},
+    "stress_high_duration": {"name": "Stress High Duration", "icon": "mdi:account-question", "unit": "min", "device_class": "duration", "state_class": "measurement"},
+    "recovery_high_duration": {"name": "Recovery High Duration", "icon": "mdi:lungs", "unit": "min", "device_class": "duration", "state_class": "measurement"},
+    "stress_day_summary": {"name": "Stress Day Summary", "icon": "mdi:account-question", "unit": None, "device_class": None, "state_class": None},
     
     # Resilience sensors
     "resilience_level": {"name": "Resilience Level", "icon": "mdi:shield", "unit": None, "device_class": None, "state_class": None},
@@ -87,12 +90,12 @@ SENSOR_TYPES: Final = {
     "stress_resilience_score": {"name": "Stress Resilience Score", "icon": "mdi:shield-account", "unit": None, "device_class": None, "state_class": "measurement"},
     
     # SpO2 sensors (Gen3 and Oura Ring 4 only)
-    "spo2_average": {"name": "SpO2 Average", "icon": "mdi:lung", "unit": "%", "device_class": None, "state_class": "measurement"},
-    "breathing_disturbance_index": {"name": "Breathing Disturbance Index", "icon": "mdi:lung", "unit": None, "device_class": None, "state_class": "measurement"},
+    "spo2_average": {"name": "SpO2 Average", "icon": "mdi:lungs", "unit": "%", "device_class": None, "state_class": "measurement"},
+    "breathing_disturbance_index": {"name": "Breathing Disturbance Index", "icon": "mdi:lungs", "unit": None, "device_class": None, "state_class": "measurement"},
     
     # Fitness sensors
-    "vo2_max": {"name": "VO2 Max", "icon": "mdi:heart-rate-monitor", "unit": "ml/kg/min", "device_class": None, "state_class": "measurement"},
-    "cardiovascular_age": {"name": "Cardiovascular Age", "icon": "mdi:heart-rate-monitor", "unit": "years", "device_class": None, "state_class": "measurement"},
+    "vo2_max": {"name": "VO2 Max", "icon": "mdi:heart-pulse", "unit": "ml/kg/min", "device_class": None, "state_class": "measurement"},
+    "cardiovascular_age": {"name": "Cardiovascular Age", "icon": "mdi:heart-pulse", "unit": "years", "device_class": None, "state_class": "measurement"},
     
     # Sleep optimization sensors
     "optimal_bedtime_start": {"name": "Optimal Bedtime Start", "icon": "mdi:bed-clock", "unit": None, "device_class": "timestamp", "state_class": None},
