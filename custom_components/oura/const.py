@@ -19,9 +19,7 @@ OAUTH2_SCOPES: Final = [
     "heartrate",
     "workout",
     "session",
-    "stress",
-    "resilience",
-    "cardiovascular_age",
+    "spo2Daily",  # SpO2 Average recorded during sleep (officially documented)
 ]
 API_BASE_URL: Final = "https://api.ouraring.com/v2/usercollection"
 
