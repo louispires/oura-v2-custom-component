@@ -176,4 +176,51 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     processed["min_heart_rate"] = min(recent_readings)
                     processed["max_heart_rate"] = max(recent_readings)
         
+        # Process stress data
+        if stress_data := data.get("stress", {}).get("data"):
+            if stress_data and len(stress_data) > 0:
+                latest_stress = stress_data[-1]
+                processed["stress_high_duration"] = latest_stress.get("stress_high_duration")
+                processed["recovery_high_duration"] = latest_stress.get("recovery_high_duration")
+                # stress_day_summary is an enum: good, bad, or unknown
+                processed["stress_day_summary"] = latest_stress.get("day_summary")
+        
+        # Process resilience data
+        if resilience_data := data.get("resilience", {}).get("data"):
+            if resilience_data and len(resilience_data) > 0:
+                latest_resilience = resilience_data[-1]
+                # resilience_level is an enum: limited, adequate, solid, strong, exceptional
+                processed["resilience_level"] = latest_resilience.get("level")
+                processed["sleep_recovery_score"] = latest_resilience.get("sleep_recovery_score")
+                processed["daytime_recovery_score"] = latest_resilience.get("daytime_recovery_score")
+                if contributors := latest_resilience.get("contributors"):
+                    processed["stress_resilience_score"] = contributors.get("activity_score")
+        
+        # Process SpO2 data (blood oxygen) - Available for Gen3 and Oura Ring 4
+        if spo2_data := data.get("spo2", {}).get("data"):
+            if spo2_data and len(spo2_data) > 0:
+                latest_spo2 = spo2_data[-1]
+                processed["spo2_average"] = latest_spo2.get("average")
+                processed["breathing_disturbance_index"] = latest_spo2.get("breathing_disturbance_index")
+        
+        # Process VO2 Max data
+        if vo2_max_data := data.get("vo2_max", {}).get("data"):
+            if vo2_max_data and len(vo2_max_data) > 0:
+                latest_vo2 = vo2_max_data[-1]
+                processed["vo2_max"] = latest_vo2.get("vo2_max")
+        
+        # Process cardiovascular age data
+        if cardiovascular_age_data := data.get("cardiovascular_age", {}).get("data"):
+            if cardiovascular_age_data and len(cardiovascular_age_data) > 0:
+                latest_cv_age = cardiovascular_age_data[-1]
+                processed["cardiovascular_age"] = latest_cv_age.get("age")
+        
+        # Process sleep time recommendations
+        if sleep_time_data := data.get("sleep_time", {}).get("data"):
+            if sleep_time_data and len(sleep_time_data) > 0:
+                latest_sleep_time = sleep_time_data[-1]
+                # These are time windows for optimal sleep, returned as ISO 8601 time strings
+                processed["optimal_bedtime_start"] = latest_sleep_time.get("optimal_bedtime_start")
+                processed["optimal_bedtime_end"] = latest_sleep_time.get("optimal_bedtime_end")
+        
         return processed

@@ -197,6 +197,84 @@ STATISTICS_METADATA = {
         "has_mean": True,
         "has_sum": False,
     },
+    "stress_high_duration": {
+        "name": "Stress High Duration",
+        "unit": UnitOfTime.MINUTES,
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "recovery_high_duration": {
+        "name": "Recovery High Duration",
+        "unit": UnitOfTime.MINUTES,
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "stress_day_summary": {
+        "name": "Stress Day Summary",
+        "unit": None,
+        "has_mean": False,
+        "has_sum": False,
+    },
+    "resilience_level": {
+        "name": "Resilience Level",
+        "unit": None,
+        "has_mean": False,
+        "has_sum": False,
+    },
+    "sleep_recovery_score": {
+        "name": "Sleep Recovery Score",
+        "unit": "score",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "daytime_recovery_score": {
+        "name": "Daytime Recovery Score",
+        "unit": "score",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "stress_resilience_score": {
+        "name": "Stress Resilience Score",
+        "unit": "score",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "spo2_average": {
+        "name": "SpO2 Average",
+        "unit": "%",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "breathing_disturbance_index": {
+        "name": "Breathing Disturbance Index",
+        "unit": None,
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "vo2_max": {
+        "name": "VO2 Max",
+        "unit": "ml/kg/min",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "cardiovascular_age": {
+        "name": "Cardiovascular Age",
+        "unit": "years",
+        "has_mean": True,
+        "has_sum": False,
+    },
+    "optimal_bedtime_start": {
+        "name": "Optimal Bedtime Start",
+        "unit": None,
+        "has_mean": False,
+        "has_sum": False,
+    },
+    "optimal_bedtime_end": {
+        "name": "Optimal Bedtime End",
+        "unit": None,
+        "has_mean": False,
+        "has_sum": False,
+    },
 }
 
 
@@ -239,6 +317,36 @@ async def async_import_statistics(
         stats_count = await _process_heartrate_statistics(hass, heartrate_data)
         total_stats += stats_count
         _LOGGER.debug("Imported %d heart rate statistics", stats_count)
+    
+    if stress_data := data.get("stress", {}).get("data"):
+        stats_count = await _process_stress_statistics(hass, stress_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d stress statistics", stats_count)
+    
+    if resilience_data := data.get("resilience", {}).get("data"):
+        stats_count = await _process_resilience_statistics(hass, resilience_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d resilience statistics", stats_count)
+    
+    if spo2_data := data.get("spo2", {}).get("data"):
+        stats_count = await _process_spo2_statistics(hass, spo2_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d SpO2 statistics", stats_count)
+    
+    if vo2_max_data := data.get("vo2_max", {}).get("data"):
+        stats_count = await _process_vo2_max_statistics(hass, vo2_max_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d VO2 Max statistics", stats_count)
+    
+    if cardiovascular_age_data := data.get("cardiovascular_age", {}).get("data"):
+        stats_count = await _process_cardiovascular_age_statistics(hass, cardiovascular_age_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d cardiovascular age statistics", stats_count)
+    
+    if sleep_time_data := data.get("sleep_time", {}).get("data"):
+        stats_count = await _process_sleep_time_statistics(hass, sleep_time_data)
+        total_stats += stats_count
+        _LOGGER.debug("Imported %d sleep time statistics", stats_count)
     
     _LOGGER.info("Successfully imported %d total statistics data points", total_stats)
 
@@ -589,6 +697,213 @@ async def _create_statistic(
         sensor_key,
     )
 
+
+async def _process_stress_statistics(
+    hass: HomeAssistant,
+    stress_data: list[dict[str, Any]],
+) -> int:
+    """Process stress data and import as statistics."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "stress_high_duration": [],
+        "recovery_high_duration": [],
+        "stress_day_summary": [],
+    }
+    
+    for entry in stress_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if stress_high := entry.get("stress_high_duration"):
+            sensor_data["stress_high_duration"].append({"timestamp": timestamp, "value": stress_high})
+        
+        if recovery_high := entry.get("recovery_high_duration"):
+            sensor_data["recovery_high_duration"].append({"timestamp": timestamp, "value": recovery_high})
+        
+        if day_summary := entry.get("day_summary"):
+            # Store enum value as is (good, bad, unknown)
+            sensor_data["stress_day_summary"].append({"timestamp": timestamp, "value": day_summary})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
+
+
+async def _process_resilience_statistics(
+    hass: HomeAssistant,
+    resilience_data: list[dict[str, Any]],
+) -> int:
+    """Process resilience data and import as statistics."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "resilience_level": [],
+        "sleep_recovery_score": [],
+        "daytime_recovery_score": [],
+        "stress_resilience_score": [],
+    }
+    
+    for entry in resilience_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if level := entry.get("level"):
+            # Store enum value (limited, adequate, solid, strong, exceptional)
+            sensor_data["resilience_level"].append({"timestamp": timestamp, "value": level})
+        
+        if sleep_recovery := entry.get("sleep_recovery_score"):
+            sensor_data["sleep_recovery_score"].append({"timestamp": timestamp, "value": sleep_recovery})
+        
+        if daytime_recovery := entry.get("daytime_recovery_score"):
+            sensor_data["daytime_recovery_score"].append({"timestamp": timestamp, "value": daytime_recovery})
+        
+        # Extract activity score from contributors
+        if contributors := entry.get("contributors"):
+            if activity_score := contributors.get("activity_score"):
+                sensor_data["stress_resilience_score"].append({"timestamp": timestamp, "value": activity_score})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
+
+
+async def _process_spo2_statistics(
+    hass: HomeAssistant,
+    spo2_data: list[dict[str, Any]],
+) -> int:
+    """Process SpO2 data and import as statistics. Available for Gen3 and Oura Ring 4."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "spo2_average": [],
+        "breathing_disturbance_index": [],
+    }
+    
+    for entry in spo2_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if spo2_avg := entry.get("average"):
+            sensor_data["spo2_average"].append({"timestamp": timestamp, "value": spo2_avg})
+        
+        if breathing_index := entry.get("breathing_disturbance_index"):
+            sensor_data["breathing_disturbance_index"].append({"timestamp": timestamp, "value": breathing_index})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
+
+
+async def _process_vo2_max_statistics(
+    hass: HomeAssistant,
+    vo2_max_data: list[dict[str, Any]],
+) -> int:
+    """Process VO2 Max fitness data and import as statistics."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "vo2_max": [],
+    }
+    
+    for entry in vo2_max_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if vo2_max := entry.get("vo2_max"):
+            sensor_data["vo2_max"].append({"timestamp": timestamp, "value": vo2_max})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
+
+
+async def _process_cardiovascular_age_statistics(
+    hass: HomeAssistant,
+    cardiovascular_age_data: list[dict[str, Any]],
+) -> int:
+    """Process cardiovascular age data and import as statistics."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "cardiovascular_age": [],
+    }
+    
+    for entry in cardiovascular_age_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if cv_age := entry.get("age"):
+            sensor_data["cardiovascular_age"].append({"timestamp": timestamp, "value": cv_age})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
+
+
+async def _process_sleep_time_statistics(
+    hass: HomeAssistant,
+    sleep_time_data: list[dict[str, Any]],
+) -> int:
+    """Process sleep time recommendations and import as statistics."""
+    stats_count = 0
+    
+    # Group data by sensor type
+    sensor_data = {
+        "optimal_bedtime_start": [],
+        "optimal_bedtime_end": [],
+    }
+    
+    for entry in sleep_time_data:
+        timestamp = _parse_date_to_timestamp(entry.get("day"))
+        if not timestamp:
+            continue
+        
+        if bedtime_start := entry.get("optimal_bedtime_start"):
+            # Store ISO 8601 time string (HH:MM:SS format)
+            sensor_data["optimal_bedtime_start"].append({"timestamp": timestamp, "value": bedtime_start})
+        
+        if bedtime_end := entry.get("optimal_bedtime_end"):
+            # Store ISO 8601 time string (HH:MM:SS format)
+            sensor_data["optimal_bedtime_end"].append({"timestamp": timestamp, "value": bedtime_end})
+    
+    # Import statistics for each sensor
+    for sensor_key, data_points in sensor_data.items():
+        if data_points:
+            await _create_statistic(hass, sensor_key, data_points)
+            stats_count += len(data_points)
+    
+    return stats_count
 
 def _parse_date_to_timestamp(date_str: str | None) -> datetime | None:
     """Parse ISO date string to datetime object.
