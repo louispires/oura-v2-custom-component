@@ -214,7 +214,7 @@ class OuraApiClient:
 
     async def _async_get_vo2_max(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
         """Get VO2 Max fitness data."""
-        url = f"{API_BASE_URL}/v2/usercollection/vO2_max"
+        url = f"{API_BASE_URL}/vO2_max"
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
