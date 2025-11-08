@@ -51,6 +51,7 @@ class OuraSensor(CoordinatorEntity[OuraDataUpdateCoordinator], SensorEntity):
         self._attr_native_unit_of_measurement = sensor_info.get("unit")
         self._attr_device_class = sensor_info.get("device_class")
         self._attr_state_class = sensor_info.get("state_class")
+        self._attr_entity_category = sensor_info.get("entity_category")
 
     @property
     def device_info(self) -> DeviceInfo:

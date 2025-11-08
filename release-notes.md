@@ -6,6 +6,17 @@ This release adds **comprehensive stress, resilience, SpO2, fitness, and sleep o
 
 ### 🧬 Code Quality & Maintainability Improvements
 
+#### Phase 5: Entity Categories & Metadata
+- **Entity Categories:** Added diagnostic category for 8 technical/secondary sensors
+  - Deep/REM sleep percentages, min/max heart rate, breathing disturbance index
+  - Target calories, optimal bedtime timestamps
+  - Primary health metrics remain in main view, diagnostics hidden by default
+- **Improved State Classes:** Changed duration/cumulative sensors from `measurement` to `total`
+  - Sleep durations, activity times, stress durations now properly accumulate
+  - Steps changed to `total_increasing` for better energy dashboard integration
+- **Better HA Integration:** Sensors now properly categorized for energy/statistics dashboards
+- **Testing:** Added 6 comprehensive tests validating entity categories and state classes
+
 #### Phase 4: Logging & Token Handling
 - **Cleaner Logs:** Removed excessive debug logging for production-ready output
 - **Simplified Token Handling:** Streamlined OAuth2 token management in API client
