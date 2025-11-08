@@ -63,32 +63,35 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 ### HRV Sensors (1)
 - Average Sleep HRV (heart rate variability during sleep)
 
-### Stress Sensors (3)
-- Stress High Duration
-- Recovery High Duration
-- Stress Day Summary
+### Stress Sensors (3) - *May be unavailable for new rings*
+- Stress High Duration ⚠️
+- Recovery High Duration ⚠️
+- Stress Day Summary ⚠️
 
-### Resilience Sensors (4) - *Requires specific Oura features*
+### Resilience Sensors (4) - *May be unavailable for new rings*
 - Resilience Level
-- Sleep Recovery Score
-- Daytime Recovery Score
-- Stress Resilience Score
+- Sleep Recovery Score ⚠️
+- Daytime Recovery Score ⚠️
+- Stress Resilience Score ⚠️
 
 ### SpO2 Sensors (2) - *Gen3/Ring4 only*
 - SpO2 Average
 - Breathing Disturbance Index
 
-### Fitness Sensors (2) - *Requires specific Oura features*
-- VO2 Max
-- Cardiovascular Age
+### Fitness Sensors (2) - *May be unavailable for new rings*
+- VO2 Max ⚠️
+- Cardiovascular Age ⚠️
 
-### Sleep Optimization Sensors (2)
-- Optimal Bedtime Start
-- Optimal Bedtime End
+### Sleep Optimization Sensors (2) - *May be unavailable for new rings*
+- Optimal Bedtime Start ⚠️
+- Optimal Bedtime End ⚠️
 
 **Total: 43 sensors**
 
-**Note**: Some sensors marked with feature requirements may return 401 Unauthorized errors if your Oura account/ring doesn't have access to those features. This is normal - the integration will continue to work with the sensors that are available to you.
+**Important Notes**:
+- Sensors marked with ⚠️ may be **unavailable** for new Oura Ring users (typically the first few weeks of usage). The Oura API does not provide data for these sensors until sufficient baseline data has been collected. This is normal behavior and they may become available over time as you continue using your ring.
+- Some sensors marked with feature requirements may return 401 Unauthorized errors if your Oura account/ring doesn't have access to those features.
+- The integration will continue to work with all available sensors - unavailable sensors simply won't display values until Oura provides data for them.
 
 ## Installation
 
@@ -683,18 +686,26 @@ If some sensors are not appearing:
 
 ### Unavailable Sensors
 
-Some sensors may show as "unavailable" when Oura doesn't have sufficient data:
+Some sensors may show as "unavailable" when Oura doesn't have sufficient data or hasn't established baseline measurements:
 
+**Common for all users (temporary unavailability):**
 - **Resting Heart Rate Score**: Requires sufficient heart rate measurements during rest periods
 - **HRV Balance Score**: Requires sufficient HRV data collection (usually from sleep)
 
+**Common for new ring users (may take weeks to become available):**
+- **Cardiovascular Age**: Requires extended baseline data collection
+- **VO2 Max**: Requires sufficient activity and cardiovascular data
+- **Stress/Recovery Metrics**: Stress High Duration, Recovery High Duration, Stress Day Summary
+- **Resilience Scores**: Sleep Recovery Score, Daytime Recovery Score, Stress Resilience Score
+- **Sleep Optimization**: Optimal Bedtime Start, Optimal Bedtime End
+
 This is normal behavior, especially:
-- In the first few days of wearing your ring
+- **In the first few weeks of wearing your ring** - Most advanced metrics require baseline establishment
 - After periods of not wearing the ring
 - If you haven't had sufficient sleep for HRV measurements
 - During data processing delays
 
-These sensors will automatically become available once Oura collects and processes the necessary data.
+These sensors will automatically become available once Oura collects and processes the necessary baseline data. The Oura API simply does not provide values for these sensors until sufficient data history exists.
 
 ### API Rate Limiting
 

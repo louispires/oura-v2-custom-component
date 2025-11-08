@@ -15,7 +15,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.13 or higher
 - Home Assistant development environment
 - Oura Ring account with API access
 
