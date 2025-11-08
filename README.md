@@ -6,6 +6,11 @@
 
 A modern Home Assistant custom integration for Oura Ring using the v2 API with OAuth2 authentication.
 
+> **⚠️ IMPORTANT: v2.0.0 Breaking Changes**  
+> If upgrading from v1.x.x, **all entity IDs have changed** from `sensor.oura_*` to `sensor.oura_ring_*`  
+> You will need to update all references in automations, scripts, and dashboards.  
+> See [v2.0.0 Release Notes](https://github.com/louispires/oura-v2-custom-component/releases/tag/v2.0.0) for migration guide.
+
 ## Features
 
 - **OAuth2 Authentication**: Secure authentication using Home Assistant's application credentials
