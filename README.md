@@ -9,11 +9,15 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 ## Features
 
 - **OAuth2 Authentication**: Secure authentication using Home Assistant's application credentials
-- **Comprehensive Data**: Access all Oura Ring data including sleep, readiness, and activity metrics
+- **Comprehensive Data**: 43 sensors covering all Oura Ring metrics including sleep, readiness, activity, stress, resilience, and more
+- **HA 2025.11 Compliant**: Modern entity naming, translation keys, entity categories, and proper state classes
 - **Historical Data Loading**: Automatically loads 30 days of historical data on first setup (configurable 7-90 days)
+- **Entity Categories**: Diagnostic sensors properly categorized for better UI organization
+- **Multi-Account Support**: Entry-scoped unique IDs allow multiple Oura accounts
 - **HACS Compatible**: Easy installation and updates via HACS
-- **Modern Architecture**: Built following the latest Home Assistant standards (2025)
-- **Efficient Updates**: Uses DataUpdateCoordinator for optimal data fetching
+- **Modern Architecture**: Configuration-driven design following latest Home Assistant standards
+- **Comprehensive Testing**: 39 automated tests ensuring reliability
+- **Efficient Updates**: Uses DataUpdateCoordinator with specialized processing methods
 
 ## Available Sensors
 
@@ -705,10 +709,15 @@ If you see rate limiting errors:
 This integration is built using modern Home Assistant patterns:
 
 - **OAuth2 Flow**: Uses Home Assistant's built-in OAuth2 implementation
-- **DataUpdateCoordinator**: Efficient data fetching and update management
+- **DataUpdateCoordinator**: Efficient data fetching with 12 specialized processing methods
+- **Configuration-Driven Design**: Maintainable, declarative structures throughout
+- **Modern Entity Standards**: `has_entity_name=True`, translation keys, entity categories
+- **Entry-Scoped IDs**: Multi-account support with proper unique ID scoping
 - **Type Hints**: Full type hint coverage for better code quality
 - **Async**: All operations are asynchronous
-- **Error Handling**: Comprehensive error handling and logging
+- **Error Handling**: Comprehensive error handling and clean logging
+- **Test Coverage**: 39 automated tests with comprehensive fixtures
+- **Code Efficiency**: 51.5% code reduction in statistics module through refactoring
 
 ## Contributing
 
@@ -730,6 +739,8 @@ This project is licensed under the MIT License.
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
 - Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
+- v2.0.0 Modernization: Comprehensive refactoring to HA 2025.11 standards
+- Test Infrastructure: Docker-based testing with 39 automated tests
 - Development assisted by: Claude Sonnet 4.5 (Anthropic AI)
 
 ## Sponsoring
