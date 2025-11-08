@@ -28,5 +28,52 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "sleep_score": {"name": "Sleep score"},
+      "total_sleep_duration": {"name": "Total sleep duration"},
+      "deep_sleep_duration": {"name": "Deep sleep duration"},
+      "rem_sleep_duration": {"name": "REM sleep duration"},
+      "light_sleep_duration": {"name": "Light sleep duration"},
+      "awake_time": {"name": "Awake time"},
+      "sleep_efficiency": {"name": "Sleep efficiency"},
+      "restfulness": {"name": "Restfulness"},
+      "sleep_latency": {"name": "Sleep latency"},
+      "sleep_timing": {"name": "Sleep timing"},
+      "deep_sleep_percentage": {"name": "Deep sleep percentage"},
+      "rem_sleep_percentage": {"name": "REM sleep percentage"},
+      "time_in_bed": {"name": "Time in bed"},
+      "readiness_score": {"name": "Readiness score"},
+      "temperature_deviation": {"name": "Temperature deviation"},
+      "resting_heart_rate": {"name": "Resting heart rate score"},
+      "hrv_balance": {"name": "HRV balance score"},
+      "activity_score": {"name": "Activity score"},
+      "steps": {"name": "Steps"},
+      "active_calories": {"name": "Active calories"},
+      "total_calories": {"name": "Total calories"},
+      "target_calories": {"name": "Target calories"},
+      "met_min_high": {"name": "High activity time"},
+      "met_min_medium": {"name": "Medium activity time"},
+      "met_min_low": {"name": "Low activity time"},
+      "current_heart_rate": {"name": "Current heart rate"},
+      "average_heart_rate": {"name": "Average heart rate"},
+      "min_heart_rate": {"name": "Minimum heart rate"},
+      "max_heart_rate": {"name": "Maximum heart rate"},
+      "average_sleep_hrv": {"name": "Average sleep HRV"},
+      "stress_high_duration": {"name": "Stress high duration"},
+      "recovery_high_duration": {"name": "Recovery high duration"},
+      "stress_day_summary": {"name": "Stress day summary"},
+      "resilience_level": {"name": "Resilience level"},
+      "sleep_recovery_score": {"name": "Sleep recovery score"},
+      "daytime_recovery_score": {"name": "Daytime recovery score"},
+      "stress_resilience_score": {"name": "Stress resilience score"},
+      "spo2_average": {"name": "SpO2 average"},
+      "breathing_disturbance_index": {"name": "Breathing disturbance index"},
+      "vo2_max": {"name": "VO2 max"},
+      "cardiovascular_age": {"name": "Cardiovascular age"},
+      "optimal_bedtime_start": {"name": "Optimal bedtime start"},
+      "optimal_bedtime_end": {"name": "Optimal bedtime end"}
+    }
   }
 }

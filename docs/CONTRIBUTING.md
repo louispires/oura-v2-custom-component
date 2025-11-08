@@ -15,7 +15,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.13 or higher
 - Home Assistant development environment
 - Oura Ring account with API access
 
@@ -60,6 +60,43 @@ We use:
 - `mypy` for type checking
 
 ## Testing
+
+### Automated Tests
+
+This project includes a comprehensive test suite with 39 tests covering all major components.
+
+#### Running Tests with Docker (Recommended)
+
+```bash
+# Run all tests
+docker-compose -f docker-compose.test.yml run --rm test pytest tests/ -v
+
+# Run specific test file
+docker-compose -f docker-compose.test.yml run --rm test pytest tests/test_sensor.py -v
+
+# Run specific test
+docker-compose -f docker-compose.test.yml run --rm test pytest tests/test_sensor.py::test_sensor_device_info -v
+```
+
+#### Test Structure
+
+- **`tests/test_sensor.py`**: Sensor entity tests (7 tests)
+- **`tests/test_statistics.py`**: Statistics module tests (6 tests)
+- **`tests/test_coordinator.py`**: Data coordinator tests (13 tests)
+- **`tests/test_entity_categories.py`**: Entity categorization tests (6 tests)
+- **`tests/test_integration_setup.py`**: Fixture validation tests (7 tests)
+
+#### Test Fixtures
+
+The `tests/conftest.py` file provides reusable fixtures:
+- `mock_config_entry`: Configured ConfigEntry with OAuth2 tokens
+- `mock_hass`: Mocked HomeAssistant instance
+- `mock_oura_api_client`: API client with sample data
+- `mock_coordinator_with_data`: Coordinator with pre-populated data
+
+See `tests/README.md` for detailed testing documentation.
+
+### Manual Testing
 
 Before submitting a pull request:
 

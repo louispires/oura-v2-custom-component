@@ -56,6 +56,8 @@ class OuraFlowHandler(
 
     async def async_oauth_create_entry(self, data: dict[str, Any]) -> config_entries.FlowResult:
         """Create an entry for Oura Ring."""
+        _LOGGER.info("Successfully authenticated")
+        _LOGGER.debug("OAuth data keys: %s", list(data.keys()))
         return self.async_create_entry(title="Oura Ring", data=data)
 
     @staticmethod

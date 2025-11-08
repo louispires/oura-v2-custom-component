@@ -4,6 +4,8 @@ from __future__ import annotations
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceEntryType
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -31,6 +33,7 @@ class OuraSensor(CoordinatorEntity[OuraDataUpdateCoordinator], SensorEntity):
     """Representation of an Oura Ring sensor."""
 
     _attr_attribution = ATTRIBUTION
+    _attr_has_entity_name = True
 
     def __init__(
         self,
@@ -41,12 +44,29 @@ class OuraSensor(CoordinatorEntity[OuraDataUpdateCoordinator], SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._sensor_type = sensor_type
-        self._attr_name = f"Oura {sensor_info['name']}"
-        self._attr_unique_id = f"oura_{sensor_type}"
+        self._attr_name = sensor_info['name']
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_{sensor_type}"
+        self._attr_translation_key = sensor_type
         self._attr_icon = sensor_info["icon"]
         self._attr_native_unit_of_measurement = sensor_info.get("unit")
         self._attr_device_class = sensor_info.get("device_class")
         self._attr_state_class = sensor_info.get("state_class")
+        self._attr_entity_category = sensor_info.get("entity_category")
+        
+        # Set options for enum sensors
+        if sensor_info.get("device_class") == "enum" and "options" in sensor_info:
+            self._attr_options = sensor_info["options"]
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device information about this Oura Ring."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.coordinator.entry.entry_id)},
+            name="Oura Ring",
+            manufacturer="Oura",
+            model="Oura Ring",
+            entry_type=DeviceEntryType.SERVICE,
+        )
 
     @property
     def native_value(self):
