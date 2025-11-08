@@ -66,6 +66,10 @@ Your Oura application should look like this:
 - ✅ heartrate
 - ✅ workout
 - ✅ session
+- ✅ tag
+- ✅ spo2
+- ✅ ring_configuration
+- ✅ stress
 
 ### Step 4: After Updating Oura
 

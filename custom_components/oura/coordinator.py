@@ -198,10 +198,17 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         
         # Process SpO2 data (blood oxygen) - Available for Gen3 and Oura Ring 4
         if spo2_data := data.get("spo2", {}).get("data"):
+            _LOGGER.debug("SpO2 data found: %s items", len(spo2_data))
             if spo2_data and len(spo2_data) > 0:
                 latest_spo2 = spo2_data[-1]
-                processed["spo2_average"] = latest_spo2.get("average")
+                _LOGGER.debug("Latest SpO2 entry: %s", latest_spo2)
+                # The API returns spo2_percentage as an object with an 'average' field
+                if spo2_percentage := latest_spo2.get("spo2_percentage"):
+                    processed["spo2_average"] = spo2_percentage.get("average")
                 processed["breathing_disturbance_index"] = latest_spo2.get("breathing_disturbance_index")
+                _LOGGER.debug("Processed SpO2 average: %s, BDI: %s", 
+                             processed.get("spo2_average"), 
+                             processed.get("breathing_disturbance_index"))
         
         # Process VO2 Max data
         if vo2_max_data := data.get("vo2_max", {}).get("data"):

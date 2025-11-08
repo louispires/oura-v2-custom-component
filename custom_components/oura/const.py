@@ -19,10 +19,10 @@ OAUTH2_SCOPES: Final = [
     "heartrate",
     "workout",
     "session",
+    "tag",
+    "spo2",
+    "ring_configuration",
     "stress",
-    "resilience",
-    "spo2Daily",
-    "cardiovascular_age"
 ]
 API_BASE_URL: Final = "https://api.ouraring.com/v2/usercollection"
 

@@ -38,6 +38,7 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+plans/
 
 # Home Assistant
 *.db

@@ -29,11 +29,16 @@ https://YOUR-HA-URL/auth/external/callback
 ## Required OAuth Scopes
 
 When creating the Oura application, select these scopes:
+- `email` - Email address
+- `personal` - Personal information (age, gender, weight, height)
 - `daily` - Daily sleep, activity, and readiness data
 - `heartrate` - Heart rate data
 - `workout` - Workout sessions
-- `session` - Session data
-- `personal` - Personal information
+- `session` - Guided and unguided sessions
+- `tag` - User-entered tags
+- `spo2` - Blood oxygen data (Gen3 and Ring 4 only)
+- `ring_configuration` - Ring configuration information
+- `stress` - Daily stress and recovery data
 
 ## Sensor Entity IDs
 

@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [".git", "custom_components"]
+asyncio_mode = "auto"

@@ -81,11 +81,16 @@ This guide walks you through installing and configuring the Oura Ring v2 integra
    - Local network: `http://192.168.1.100:8123/auth/external/callback`
    
    **Application Scope**: Select all available scopes:
+   - `email`
+   - `personal`
    - `daily`
    - `heartrate`
    - `workout`
    - `session`
-   - `personal`
+   - `tag`
+   - `spo2`
+   - `ring_configuration`
+   - `stress`
 
 3. Click **Create** or **Save**
 

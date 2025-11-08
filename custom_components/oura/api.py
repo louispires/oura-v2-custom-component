@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import logging
 from typing import Any
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientResponseError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from homeassistant.core import HomeAssistant
@@ -195,40 +195,84 @@ class OuraApiClient:
         return await self._async_get(url, params)
 
     async def _async_get_resilience(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
-        """Get daily resilience data."""
+        """Get daily resilience data.
+        
+        Note: This endpoint may return 401 if the user hasn't authorized the required scope
+        or if their ring/subscription doesn't support this feature.
+        """
         url = f"{API_BASE_URL}/daily_resilience"
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
         }
-        return await self._async_get(url, params)
+        try:
+            return await self._async_get(url, params)
+        except ClientResponseError as err:
+            # Return empty data for 401 errors (no permission/unsupported feature)
+            if err.status == 401:
+                _LOGGER.debug("Resilience data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+                return {"data": []}
+            raise
 
     async def _async_get_spo2(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
-        """Get daily SpO2 (blood oxygen) data. Available for Gen3 and Oura Ring 4."""
+        """Get daily SpO2 (blood oxygen) data. Available for Gen3 and Oura Ring 4.
+        
+        Note: This endpoint may return 401 if the user hasn't authorized the spo2Daily scope
+        or if their ring doesn't support SpO2 (only Gen3 and Ring 4).
+        """
         url = f"{API_BASE_URL}/daily_spo2"
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
         }
-        return await self._async_get(url, params)
+        try:
+            return await self._async_get(url, params)
+        except ClientResponseError as err:
+            # Return empty data for 401 errors (no permission/unsupported feature)
+            if err.status == 401:
+                _LOGGER.debug("SpO2 data not available (401 Unauthorized) - may require re-authorization or unsupported by device (Gen3/Ring4 only)")
+                return {"data": []}
+            raise
 
     async def _async_get_vo2_max(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
-        """Get VO2 Max fitness data."""
+        """Get VO2 Max fitness data.
+        
+        Note: This endpoint may return 401 if the user hasn't authorized the required scope
+        or if their ring/subscription doesn't support this feature.
+        """
         url = f"{API_BASE_URL}/vO2_max"
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
         }
-        return await self._async_get(url, params)
+        try:
+            return await self._async_get(url, params)
+        except ClientResponseError as err:
+            # Return empty data for 401 errors (no permission/unsupported feature)
+            if err.status == 401:
+                _LOGGER.debug("VO2 Max data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+                return {"data": []}
+            raise
 
     async def _async_get_cardiovascular_age(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
-        """Get daily cardiovascular age data."""
+        """Get daily cardiovascular age data.
+        
+        Note: This endpoint may return 401 if the user hasn't authorized the required scope
+        or if their ring/subscription doesn't support this feature.
+        """
         url = f"{API_BASE_URL}/daily_cardiovascular_age"
         params = {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
         }
-        return await self._async_get(url, params)
+        try:
+            return await self._async_get(url, params)
+        except ClientResponseError as err:
+            # Return empty data for 401 errors (no permission/unsupported feature)
+            if err.status == 401:
+                _LOGGER.debug("Cardiovascular age data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+                return {"data": []}
+            raise
 
     async def _async_get_sleep_time(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
         """Get optimal sleep time recommendations."""
@@ -273,10 +317,27 @@ class OuraApiClient:
         
         try:
             async with self.client_session.get(url, headers=headers, params=params) as response:
+                # Check for 401 before raising to capture response body
+                if response.status == 401:
+                    try:
+                        error_body = await response.json()
+                        _LOGGER.debug("Received 401 Unauthorized from %s - Response: %s", url, error_body)
+                    except Exception:
+                        error_text = await response.text()
+                        _LOGGER.debug("Received 401 Unauthorized from %s - Response: %s", url, error_text)
+                
                 response.raise_for_status()
                 data = await response.json()
                 _LOGGER.debug("Received response from %s: %s items", url, len(data.get('data', [])) if isinstance(data, dict) else 'unknown')
                 return data
+        except ClientResponseError as err:
+            # Don't log 401 errors as ERROR - they're handled gracefully by calling methods
+            # for optional features (resilience, spo2, vo2_max, cardiovascular_age)
+            if err.status == 401:
+                _LOGGER.debug("401 error from %s - optional feature may not be available", url)
+            else:
+                _LOGGER.error("Error fetching data from %s: %s", url, err)
+            raise
         except Exception as err:
             _LOGGER.error("Error fetching data from %s: %s", url, err)
             raise
