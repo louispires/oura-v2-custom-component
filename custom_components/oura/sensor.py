@@ -52,6 +52,10 @@ class OuraSensor(CoordinatorEntity[OuraDataUpdateCoordinator], SensorEntity):
         self._attr_device_class = sensor_info.get("device_class")
         self._attr_state_class = sensor_info.get("state_class")
         self._attr_entity_category = sensor_info.get("entity_category")
+        
+        # Set options for enum sensors
+        if sensor_info.get("device_class") == "enum" and "options" in sensor_info:
+            self._attr_options = sensor_info["options"]
 
     @property
     def device_info(self) -> DeviceInfo:

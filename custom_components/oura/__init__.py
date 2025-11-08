@@ -30,6 +30,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Oura Ring from a config entry."""
+    _LOGGER.debug("Setting up Oura Ring entry. Entry data keys: %s", list(entry.data.keys()))
+    
     implementation = (
         await config_entry_oauth2_flow.async_get_config_entry_implementation(
             hass, entry
@@ -38,12 +40,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     session = config_entry_oauth2_flow.OAuth2Session(hass, entry, implementation)
     
+    # Log session state for debugging
+    _LOGGER.debug("OAuth2Session created. Valid token: %s", session.valid_token)
+    
     # Pass the entry to the API client so it can access the token directly
     api_client = OuraApiClient(hass, session, entry)
     
     # Get update interval from options, or use default
     update_interval = entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
-    coordinator = OuraDataUpdateCoordinator(hass, api_client, update_interval)
+    coordinator = OuraDataUpdateCoordinator(hass, api_client, entry, update_interval)
 
     # Check if this is the first setup (no historical data loaded yet)
     # We'll use a flag stored in hass.data to track this

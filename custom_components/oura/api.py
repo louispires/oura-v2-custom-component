@@ -274,17 +274,40 @@ class OuraApiClient:
 
     async def _async_get(self, url: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """Make GET request to Oura API."""
-        token = await self.session.async_ensure_token_valid()
-        
-        headers = {
-            "Authorization": f"Bearer {token['access_token']}",
-        }
-        
         try:
+            # Ensure token is valid and get the token data
+            await self.session.async_ensure_token_valid()
+            
+            # Access the token directly from the session
+            if not self.session.valid_token or not self.session.token:
+                _LOGGER.error(
+                    "OAuth session has no valid token. Valid: %s, Token exists: %s",
+                    self.session.valid_token,
+                    self.session.token is not None
+                )
+                raise ValueError("Failed to get valid OAuth token")
+            
+            token = self.session.token
+            
+            if 'access_token' not in token:
+                _LOGGER.error("Token missing access_token. Token keys: %s", list(token.keys()))
+                raise ValueError("OAuth token missing access_token")
+            
+            headers = {
+                "Authorization": f"Bearer {token['access_token']}",
+            }
+            
             async with self.client_session.get(url, headers=headers, params=params) as response:
                 response.raise_for_status()
                 return await response.json()
         except ClientResponseError as err:
             if err.status != 401:  # 401 handled gracefully by callers for optional features
                 _LOGGER.error("Error fetching data from %s: %s", url, err)
+            raise
+        except (TypeError, KeyError) as err:
+            # Handle token validation failures
+            _LOGGER.error("Token error fetching data from %s: %s", url, err)
+            raise
+        except Exception as err:
+            _LOGGER.error("Unexpected error fetching data from %s: %s", url, err)
             raise

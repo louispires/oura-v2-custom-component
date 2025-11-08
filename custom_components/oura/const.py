@@ -2,6 +2,8 @@
 from datetime import timedelta
 from typing import Final
 
+from homeassistant.helpers.entity import EntityCategory
+
 DOMAIN: Final = "oura"
 ATTRIBUTION: Final = "Data provided by Oura Ring"
 
@@ -49,8 +51,8 @@ SENSOR_TYPES: Final = {
     "restfulness": {"name": "Restfulness", "icon": "mdi:bed", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": None},
     "sleep_latency": {"name": "Sleep Latency", "icon": "mdi:timer", "unit": "min", "device_class": "duration", "state_class": "measurement", "entity_category": None},
     "sleep_timing": {"name": "Sleep Timing", "icon": "mdi:clock-check", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": None},
-    "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
-    "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
+    "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
+    "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     "time_in_bed": {"name": "Time in Bed", "icon": "mdi:bed-clock", "unit": "h", "device_class": "duration", "state_class": "total", "entity_category": None},
     
     # Readiness sensors
@@ -64,7 +66,7 @@ SENSOR_TYPES: Final = {
     "steps": {"name": "Steps", "icon": "mdi:walk", "unit": "steps", "device_class": None, "state_class": "total_increasing", "entity_category": None},
     "active_calories": {"name": "Active Calories", "icon": "mdi:fire", "unit": "kcal", "device_class": None, "state_class": "total", "entity_category": None},
     "total_calories": {"name": "Total Calories", "icon": "mdi:fire", "unit": "kcal", "device_class": None, "state_class": "total", "entity_category": None},
-    "target_calories": {"name": "Target Calories", "icon": "mdi:bullseye", "unit": "kcal", "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
+    "target_calories": {"name": "Target Calories", "icon": "mdi:bullseye", "unit": "kcal", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     "met_min_high": {"name": "High Activity Time", "icon": "mdi:run-fast", "unit": "min", "device_class": "duration", "state_class": "total", "entity_category": None},
     "met_min_medium": {"name": "Medium Activity Time", "icon": "mdi:run", "unit": "min", "device_class": "duration", "state_class": "total", "entity_category": None},
     "met_min_low": {"name": "Low Activity Time", "icon": "mdi:walk", "unit": "min", "device_class": "duration", "state_class": "total", "entity_category": None},
@@ -72,8 +74,8 @@ SENSOR_TYPES: Final = {
     # Heart Rate sensors (from heartrate endpoint - more granular data)
     "current_heart_rate": {"name": "Current Heart Rate", "icon": "mdi:heart-pulse", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": None},
     "average_heart_rate": {"name": "Average Heart Rate", "icon": "mdi:heart", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": None},
-    "min_heart_rate": {"name": "Minimum Heart Rate", "icon": "mdi:heart-minus", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
-    "max_heart_rate": {"name": "Maximum Heart Rate", "icon": "mdi:heart-plus", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
+    "min_heart_rate": {"name": "Minimum Heart Rate", "icon": "mdi:heart-minus", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
+    "max_heart_rate": {"name": "Maximum Heart Rate", "icon": "mdi:heart-plus", "unit": "bpm", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     
     # HRV sensors (from detailed sleep endpoint)
     "average_sleep_hrv": {"name": "Average Sleep HRV", "icon": "mdi:heart-pulse", "unit": "ms", "device_class": None, "state_class": "measurement", "entity_category": None},
@@ -84,20 +86,20 @@ SENSOR_TYPES: Final = {
     "stress_day_summary": {"name": "Stress Day Summary", "icon": "mdi:account-question", "unit": None, "device_class": None, "state_class": None, "entity_category": None},
     
     # Resilience sensors
-    "resilience_level": {"name": "Resilience Level", "icon": "mdi:shield", "unit": None, "device_class": None, "state_class": None, "entity_category": None},
+    "resilience_level": {"name": "Resilience Level", "icon": "mdi:shield", "unit": None, "device_class": "enum", "state_class": None, "entity_category": None, "options": ["limited", "adequate", "solid", "strong", "exceptional"]},
     "sleep_recovery_score": {"name": "Sleep Recovery Score", "icon": "mdi:bed-clock", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": None},
     "daytime_recovery_score": {"name": "Daytime Recovery Score", "icon": "mdi:sun-clock", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": None},
     "stress_resilience_score": {"name": "Stress Resilience Score", "icon": "mdi:shield-account", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": None},
     
     # SpO2 sensors (Gen3 and Oura Ring 4 only)
     "spo2_average": {"name": "SpO2 Average", "icon": "mdi:lungs", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": None},
-    "breathing_disturbance_index": {"name": "Breathing Disturbance Index", "icon": "mdi:lungs", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": "diagnostic"},
+    "breathing_disturbance_index": {"name": "Breathing Disturbance Index", "icon": "mdi:lungs", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     
     # Fitness sensors
     "vo2_max": {"name": "VO2 Max", "icon": "mdi:heart-pulse", "unit": "ml/kg/min", "device_class": None, "state_class": "measurement", "entity_category": None},
     "cardiovascular_age": {"name": "Cardiovascular Age", "icon": "mdi:heart-pulse", "unit": "years", "device_class": None, "state_class": "measurement", "entity_category": None},
     
     # Sleep optimization sensors
-    "optimal_bedtime_start": {"name": "Optimal Bedtime Start", "icon": "mdi:bed-clock", "unit": None, "device_class": "timestamp", "state_class": None, "entity_category": "diagnostic"},
-    "optimal_bedtime_end": {"name": "Optimal Bedtime End", "icon": "mdi:bed-clock", "unit": None, "device_class": "timestamp", "state_class": None, "entity_category": "diagnostic"},
+    "optimal_bedtime_start": {"name": "Optimal Bedtime Start", "icon": "mdi:bed-clock", "unit": None, "device_class": "timestamp", "state_class": None, "entity_category": EntityCategory.DIAGNOSTIC},
+    "optimal_bedtime_end": {"name": "Optimal Bedtime End", "icon": "mdi:bed-clock", "unit": None, "device_class": "timestamp", "state_class": None, "entity_category": EntityCategory.DIAGNOSTIC},
 }

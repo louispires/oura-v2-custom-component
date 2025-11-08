@@ -5,6 +5,7 @@ from datetime import timedelta
 import logging
 from typing import Any
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -22,6 +23,7 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self,
         hass: HomeAssistant,
         api_client: OuraApiClient,
+        entry: ConfigEntry,
         update_interval_minutes: int = DEFAULT_UPDATE_INTERVAL,
     ) -> None:
         """Initialize."""
@@ -32,6 +34,7 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(minutes=update_interval_minutes),
         )
         self.api_client = api_client
+        self.entry = entry
         self.historical_data_loaded = False
 
     async def _async_update_data(self) -> dict[str, Any]:
