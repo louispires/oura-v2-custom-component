@@ -235,7 +235,8 @@ The [apexcharts-card](https://github.com/RomRider/apexcharts-card) is a highly c
 #### Scores Overview Card
 
 Track your sleep, readiness, and activity scores over the past week:
-<img width="947" height="804" alt="image" src="https://github.com/user-attachments/assets/13fafd56-db90-40a5-9f3f-99c12ee74707" />
+<img width="947" height="804" alt="image" src="https://github.com/user-attachments/assets/ddb7d8d6-6cab-417a-b596-5dd600f506ed" />
+
 <details>
 <summary>yaml</summary>
    
