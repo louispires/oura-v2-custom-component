@@ -4,6 +4,30 @@ This release adds **comprehensive stress, resilience, SpO2, fitness, and sleep o
 
 ## ✨ NEW FEATURES IN v1.2.0
 
+### 🧬 Code Quality & Maintainability Improvements
+
+#### Phase 3: Coordinator Refactoring
+- **Code Simplification:** Refactored `coordinator.py` from 252 to 241 lines (4.4% reduction)
+- **Method Extraction:** Split 162-line `_process_data` method into 12 focused methods for better maintainability
+- **Separation of Concerns:** Each data type now has its own processing method:
+  - Sleep scores, sleep details, readiness, activity, heart rate
+  - Stress, resilience, SpO2, VO2 Max, cardiovascular age, sleep time
+- **Testing:** Added 13 comprehensive unit tests for all data processing methods
+- **Orchestration:** Main `_process_data` method now delegates to specialized processors
+
+#### Phase 2: Statistics Module Refactoring
+- **Code Reduction:** Reduced `statistics.py` from 896 to 435 lines (51.5% reduction)
+- **Configuration-Driven Design:** Replaced 11 duplicated functions with single generic processor
+- **Helper Functions:** Added 4 reusable utility functions for data transformations
+- **Testing:** Added 6 unit tests covering all transformation logic
+
+#### Phase 1: Device Registry & Modern Entity Naming
+- **Single Device Entry**: All 43 sensors now properly grouped under one "Oura Ring" device
+- **Modern Entity Naming**: Follows HA 2025.11 standards with `has_entity_name=True`
+- **Full Translation Support**: Entity names properly translated (currently English)
+- **Entry-Scoped Unique IDs**: Prevents conflicts with multiple Oura accounts
+- **Testing:** Added 7 unit tests and Docker-based test infrastructure
+
 ### 🏠 Home Assistant 2025.11 Modernization
 - **Single Device Entry**: All 43 sensors now properly grouped under one "Oura Ring" device
 - **Modern Entity Naming**: Follows HA 2025.11 naming standards with `has_entity_name=True`
