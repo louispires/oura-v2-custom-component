@@ -64,16 +64,54 @@ All features from v1.2.0 remain available:
 - **OAuth2 authentication** with proper scope handling
 - **HACS compatible** for easy installation
 
-## ⚠️ UPGRADE NOTES
+## ⚠️ BREAKING CHANGES & UPGRADE NOTES
 
-### For Users on v1.x.x
+### 🔴 BREAKING CHANGE: Entity ID Naming Convention
+
+Due to Home Assistant 2025.11 modernization, **all entity IDs have changed**:
+
+**Old format (v1.x.x):**
+```
+sensor.oura_sleep_score
+sensor.oura_readiness_score
+sensor.oura_resilience_level
+```
+
+**New format (v2.0.0):**
+```
+sensor.oura_ring_sleep_score
+sensor.oura_ring_readiness_score
+sensor.oura_ring_resilience_level
+```
+
+### 📋 Migration Steps for v1.x.x Users
+
+1. **Before upgrading**, export any automations/scripts using Oura sensors
+2. **Upgrade** to v2.0.0 via HACS
+3. **Update references** in:
+   - Automations
+   - Scripts
+   - Dashboards/Lovelace cards
+   - Templates
+   - Any custom integrations using these entities
+4. **Find & Replace**: Use `sensor.oura_` → `sensor.oura_ring_` throughout your configuration
+
+### 💡 Migration Tip
+
+Use Home Assistant's built-in search feature:
+1. Go to **Developer Tools** → **States**
+2. Filter for `oura_ring` to see all new entity IDs
+3. Use text editor find/replace in your YAML files
+
+### ✅ What Still Works
+
 - **No re-authorization required** - existing OAuth tokens will continue working
-- **No breaking changes** - all sensors and entity IDs remain the same
-- **Automatic fixes** - bug fixes apply immediately upon upgrade
-- **Recommended**: Review sensor availability documentation for new rings
+- **Historical data preserved** - long-term statistics remain intact
+- **Automatic bug fixes** - all bug fixes apply immediately upon upgrade
 
-### For New Installations
+### 🆕 For New Installations
 - Follow standard installation process via HACS
+- Entity IDs will use the new `sensor.oura_ring_*` format from the start
 - Some sensors may be unavailable initially (see documentation)
 - Historical data will load automatically on first setup
 
