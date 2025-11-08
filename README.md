@@ -11,7 +11,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - **OAuth2 Authentication**: Secure authentication using Home Assistant's application credentials
 - **Comprehensive Data**: 43 sensors covering all Oura Ring metrics including sleep, readiness, activity, stress, resilience, and more
 - **HA 2025.11 Compliant**: Modern entity naming, translation keys, entity categories, and proper state classes
-- **Historical Data Loading**: Automatically loads 30 days of historical data on first setup (configurable 7-90 days)
+- **Historical Data Loading**: Automatically loads 14 days of historical data on first setup (configurable 1-90 days)
 - **Entity Categories**: Diagnostic sensors properly categorized for better UI organization
 - **Multi-Account Support**: Entry-scoped unique IDs allow multiple Oura accounts
 - **HACS Compatible**: Easy installation and updates via HACS
@@ -185,7 +185,7 @@ The integration polls the Oura API with a configurable update interval (default:
 1. Go to **Settings** → **Devices & Services**
 2. Find "Oura Ring" and click **CONFIGURE**
 3. Set your desired update interval (1-60 minutes)
-4. Set historical data days (7-90 days) - **only loaded on first setup**
+4. Set historical data days (1-90 days) - **only loaded on first setup**
 5. Click **SUBMIT**
 
 The integration will automatically reload with the new interval. The default 5-minute interval is optimized to:
@@ -195,12 +195,12 @@ The integration will automatically reload with the new interval. The default 5-m
 
 ### Historical Data Loading
 
-On **first setup**, the integration automatically fetches historical data (default: 30 days) to populate your dashboards immediately. This means:
+On **first setup**, the integration automatically fetches historical data (default: 14 days) to populate your dashboards immediately. This means:
 
 ✅ **Instant dashboard population** - Your charts show data from day one  
 ✅ **No waiting period** - See trends and patterns immediately  
 ✅ **One-time fetch** - Historical data is only loaded once during initial setup  
-✅ **Configurable** - Choose 7-90 days of history based on your needs  
+✅ **Configurable** - Choose 1-90 days of history based on your needs  
 
 After the initial historical load, the integration fetches only new data during regular updates (every 5 minutes by default), keeping API usage minimal.
 
@@ -208,7 +208,7 @@ After the initial historical load, the integration fetches only new data during 
 
 The integration uses Home Assistant's **Long-Term Statistics** system to store historical data:
 
-1. **Initial Setup**: When you first add the integration, it fetches 30 days (or your configured amount) of historical data
+1. **Initial Setup**: When you first add the integration, it fetches 14 days (or your configured amount) of historical data
 2. **Statistics Import**: All historical data points are imported as long-term statistics with proper timestamps
 3. **Database Storage**: Data is stored in Home Assistant's statistics database (separate from state history)
 4. **Immediate Availability**: All history graphs, ApexCharts, and Energy dashboard cards can access this data immediately
