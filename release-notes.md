@@ -84,24 +84,49 @@ sensor.oura_ring_readiness_score
 sensor.oura_ring_resilience_level
 ```
 
-### 📋 Migration Steps for v1.x.x Users
+### 📋 Migration Path to Preserve Historical Data
 
-1. **Before upgrading**, export any automations/scripts using Oura sensors
-2. **Upgrade** to v2.0.0 via HACS
-3. **Update references** in:
+**Option 1: Rename Device to Keep Old Entity IDs (Recommended)**
+
+This method preserves ALL historical data by keeping your old entity IDs:
+
+1. **Upgrade** to v2.0.0 via HACS
+2. **Restart** Home Assistant
+3. Go to **Settings** → **Devices & Services** → **Oura Ring**
+4. Click on the **Oura Ring** device
+5. Click the **⚙️ (gear icon)** at the top right
+6. **Rename** the device from "Oura Ring" to **"Oura"**
+7. Click the **☰ (burger menu)** at the top right
+8. Select **"Rename entities"**
+9. This will rename all entities back to the old format (`sensor.oura_*`)
+10. ✅ **All your historical data is preserved!**
+
+**Optional:** If you want custom entity names:
+- Rename the device again to anything you like (e.g., "Louis' Oura")
+- Use "Rename entities" again to update to your preferred naming scheme
+
+**Option 2: Manual Entity Rename (For Custom Names)**
+
+If you want to keep the new `sensor.oura_ring_*` format but preserve history:
+
+1. **Before upgrading**, note down your entity IDs
+2. **Upgrade** to v2.0.0 via HACS and restart
+3. For each entity, go to **Settings** → **Entities** → search for the entity
+4. Click the entity, then click the **⚙️ (gear icon)**
+5. Change the **Entity ID** to match your old one
+6. Historical data will be preserved for renamed entities
+
+**Option 3: Update All References (No Data Preservation)**
+
+If historical data preservation isn't critical:
+
+1. **Upgrade** to v2.0.0 via HACS
+2. **Find & Replace**: Use `sensor.oura_` → `sensor.oura_ring_` in:
    - Automations
    - Scripts
    - Dashboards/Lovelace cards
    - Templates
-   - Any custom integrations using these entities
-4. **Find & Replace**: Use `sensor.oura_` → `sensor.oura_ring_` throughout your configuration
-
-### 💡 Migration Tip
-
-Use Home Assistant's built-in search feature:
-1. Go to **Developer Tools** → **States**
-2. Filter for `oura_ring` to see all new entity IDs
-3. Use text editor find/replace in your YAML files
+3. New data will start recording under new entity IDs
 
 ### ✅ What Still Works
 
