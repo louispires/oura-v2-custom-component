@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
-  homeassistant-test:
+  test:
     image: homeassistant/home-assistant:2025.11
     container_name: oura-test
     volumes:
       - ./custom_components:/config/custom_components
       - ./tests:/config/tests
     working_dir: /config
-    command: python -m pytest tests/test_sensor.py -v
+    command: python -m pytest tests/ -v
     environment:
       - PYTHONPATH=/config
