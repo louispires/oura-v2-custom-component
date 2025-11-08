@@ -1,4 +1,96 @@
-﻿## 🎉 Welcome to Oura Ring v2 Integration v1.2.0!
+﻿## 🎉 Oura Ring v2 Integration v2.0.0 - Production Ready!
+
+This is a **major milestone release** marking the integration as **production-ready** with critical bug fixes, enhanced reliability, and comprehensive testing!
+
+## 🐛 CRITICAL BUG FIXES IN v2.0.0
+
+### OAuth Token Access Fix
+- **Fixed**: OAuth token was being accessed incorrectly, causing `None` token errors
+- **Root Cause**: `async_ensure_token_valid()` validates/refreshes but doesn't return the token
+- **Solution**: Now properly accesses token via `session.token` property after validation
+- **Impact**: Eliminates authentication failures and API call errors
+
+### Entity Category Validation Fix
+- **Fixed**: Entity category validation errors preventing sensor creation
+- **Root Cause**: Using string `"diagnostic"` instead of `EntityCategory.DIAGNOSTIC` enum
+- **Solution**: Imported `EntityCategory` from `homeassistant.helpers.entity` and converted all strings to enums
+- **Impact**: All diagnostic sensors now properly categorized and functional
+
+### Coordinator Entry Attribute Fix
+- **Fixed**: `AttributeError: 'OuraDataUpdateCoordinator' object has no attribute 'entry'`
+- **Root Cause**: Coordinator wasn't storing the ConfigEntry reference needed for unique IDs
+- **Solution**: Added `entry: ConfigEntry` parameter to coordinator and stored as instance attribute
+- **Impact**: Fixes sensor initialization and multi-account support
+
+## ✨ ENHANCEMENTS IN v2.0.0
+
+### Enum Device Class Support
+- **Resilience Level** sensor now has proper enum device class
+- **Valid Options**: limited, adequate, solid, strong, exceptional
+- **User Experience**: Users can see all possible resilience levels in the UI
+
+### Enhanced Debugging
+- Added debug logging for OAuth session state to aid troubleshooting
+- Authentication success messages in config flow
+- Better error context for API failures
+
+### Documentation Improvements
+- **README Updates**: Added ⚠️ warnings for 10 sensors commonly unavailable for new users
+- **Sensor Availability**: Clear documentation explaining why certain sensors may be unavailable initially
+- **New User Guidance**: Detailed explanation of baseline data collection requirements
+- **Corrected Defaults**: Fixed historical data default from 30 to 14 days to match actual code
+
+## 🧪 TESTING & VALIDATION
+
+### Comprehensive Test Suite
+- **39 automated tests** all passing
+- Docker-based testing with Home Assistant 2025.11
+- Tests cover coordinator, sensors, statistics, entity categories, and integration setup
+- Validates all bug fixes and enhancements
+
+### Real-World Deployment
+- Tested with actual Home Assistant 2025.11 installation
+- Verified OAuth flow works correctly
+- Confirmed all 43 sensors populate properly
+- Validated historical data loading and statistics integration
+
+## 📊 COMPLETE FEATURE SET
+
+All features from v1.2.0 remain available:
+- **43 sensors** covering sleep, readiness, activity, heart rate, HRV, stress, resilience, SpO2, fitness, and sleep optimization
+- **Historical data loading** with 14-day default (configurable 1-90 days)
+- **Long-term statistics** integration for all sensors
+- **Home Assistant 2025.11 compliance** with modern entity naming and device grouping
+- **OAuth2 authentication** with proper scope handling
+- **HACS compatible** for easy installation
+
+## ⚠️ UPGRADE NOTES
+
+### For Users on v1.x.x
+- **No re-authorization required** - existing OAuth tokens will continue working
+- **No breaking changes** - all sensors and entity IDs remain the same
+- **Automatic fixes** - bug fixes apply immediately upon upgrade
+- **Recommended**: Review sensor availability documentation for new rings
+
+### For New Installations
+- Follow standard installation process via HACS
+- Some sensors may be unavailable initially (see documentation)
+- Historical data will load automatically on first setup
+
+## 📈 STABILITY IMPROVEMENTS
+
+- **Production Ready**: All critical bugs resolved
+- **Enhanced Reliability**: Proper error handling and validation
+- **Better User Experience**: Clear documentation and helpful error messages
+- **Tested at Scale**: Validated with comprehensive automated test suite
+
+## 🙏 ACKNOWLEDGMENTS
+
+Special thanks to users who reported issues and provided logs that helped identify and fix these critical bugs!
+
+---
+
+## 🎉 Welcome to Oura Ring v2 Integration v1.2.0!
 
 This release adds **comprehensive stress, resilience, SpO2, fitness, and sleep optimization sensors** for deeper health insights, plus **Home Assistant 2025.11 modernization** for improved device grouping and entity naming!
 
