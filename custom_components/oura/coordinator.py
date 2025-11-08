@@ -50,34 +50,25 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             days: Number of days of historical data to fetch
         """
         try:
-            _LOGGER.info("Fetching %d days of historical Oura data...", days)
+            _LOGGER.info("Loading %d days of historical data...", days)
             historical_data = await self.api_client.async_get_data(days_back=days)
             
-            _LOGGER.debug("Historical data fetched. Keys: %s", list(historical_data.keys()))
-            
             # Import historical data as long-term statistics
-            _LOGGER.info("Importing historical data as long-term statistics...")
             try:
                 await async_import_statistics(self.hass, historical_data)
-                _LOGGER.info("Statistics import completed successfully")
+                _LOGGER.info("Historical data loaded successfully")
             except Exception as stats_err:
-                _LOGGER.error("Failed to import statistics: %s", stats_err, exc_info=True)
+                _LOGGER.error("Failed to import statistics: %s", stats_err)
                 raise
             
             # Process and store the LATEST day's data for current sensor states
             processed_data = self._process_data(historical_data)
             
-            _LOGGER.debug("Processed current data. Keys: %s", list(processed_data.keys()))
-            
             # Update the coordinator's data with current information
             self.data = processed_data
             self.historical_data_loaded = True
-            
-            _LOGGER.info("Successfully loaded %d days of historical data and %d current metrics", 
-                        days, len(processed_data))
         except Exception as err:
-            _LOGGER.error("Failed to fetch historical data: %s", err, exc_info=True)
-            _LOGGER.warning("Will continue with daily updates only")
+            _LOGGER.error("Failed to fetch historical data: %s", err)
             raise
 
     def _process_data(self, data: dict[str, Any]) -> dict[str, Any]:

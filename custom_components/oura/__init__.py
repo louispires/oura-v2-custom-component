@@ -30,16 +30,6 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Oura Ring from a config entry."""
-    _LOGGER.debug("Setting up Oura Ring config entry: %s", entry.entry_id)
-    _LOGGER.debug("Entry data keys: %s", list(entry.data.keys()))
-    
-    # Check what's in the token data
-    if 'token' in entry.data:
-        token_data = entry.data.get('token')
-        _LOGGER.debug("Token data type: %s", type(token_data))
-        if isinstance(token_data, dict):
-            _LOGGER.debug("Token data keys: %s", list(token_data.keys()))
-    
     implementation = (
         await config_entry_oauth2_flow.async_get_config_entry_implementation(
             hass, entry
@@ -60,23 +50,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     is_first_setup = entry.entry_id not in hass.data[DOMAIN]
     
-    _LOGGER.info("Integration setup - Entry ID: %s, First setup: %s", entry.entry_id, is_first_setup)
-    
     if is_first_setup:
         # Get historical days from options, or use default
         historical_days = entry.options.get(CONF_HISTORICAL_DAYS, DEFAULT_HISTORICAL_DAYS)
         
-        _LOGGER.info("First setup detected - will load %d days of historical data", historical_days)
+        _LOGGER.info("Loading %d days of historical data...", historical_days)
         
         # Load historical data before first refresh
         try:
             await coordinator.async_load_historical_data(historical_days)
-            _LOGGER.info("Historical data load completed successfully")
         except Exception as err:
-            _LOGGER.error("Failed to load historical data: %s", err, exc_info=True)
+            _LOGGER.error("Failed to load historical data: %s", err)
             # Continue anyway - regular updates will still work
-    else:
-        _LOGGER.info("Not first setup - skipping historical data load")
     
     # Do the first refresh (or subsequent refreshes)
     await coordinator.async_config_entry_first_refresh()

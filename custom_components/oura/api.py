@@ -43,8 +43,6 @@ class OuraApiClient:
         end_date = datetime.now().date()
         start_date = end_date - timedelta(days=days_back)
         
-        _LOGGER.debug("Fetching Oura data from %s to %s (%d days)", start_date, end_date, days_back)
-        
         sleep_data, readiness_data, activity_data, heartrate_data, sleep_detail_data, stress_data, resilience_data, spo2_data, vo2_max_data, cardiovascular_age_data, sleep_time_data = await asyncio.gather(
             self._async_get_sleep(start_date, end_date),
             self._async_get_readiness(start_date, end_date),
@@ -138,7 +136,6 @@ class OuraApiClient:
         
         # If range is > 7 days, batch the requests
         if days_range > 7:
-            _LOGGER.debug("Heart rate range is %d days, batching into 7-day chunks", days_range)
             all_data = []
             current_start = start_date
             
@@ -208,9 +205,7 @@ class OuraApiClient:
         try:
             return await self._async_get(url, params)
         except ClientResponseError as err:
-            # Return empty data for 401 errors (no permission/unsupported feature)
-            if err.status == 401:
-                _LOGGER.debug("Resilience data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+            if err.status == 401:  # Feature not available
                 return {"data": []}
             raise
 
@@ -228,9 +223,7 @@ class OuraApiClient:
         try:
             return await self._async_get(url, params)
         except ClientResponseError as err:
-            # Return empty data for 401 errors (no permission/unsupported feature)
-            if err.status == 401:
-                _LOGGER.debug("SpO2 data not available (401 Unauthorized) - may require re-authorization or unsupported by device (Gen3/Ring4 only)")
+            if err.status == 401:  # Feature not available (Gen3/Ring4 only)
                 return {"data": []}
             raise
 
@@ -248,9 +241,7 @@ class OuraApiClient:
         try:
             return await self._async_get(url, params)
         except ClientResponseError as err:
-            # Return empty data for 401 errors (no permission/unsupported feature)
-            if err.status == 401:
-                _LOGGER.debug("VO2 Max data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+            if err.status == 401:  # Feature not available
                 return {"data": []}
             raise
 
@@ -268,9 +259,7 @@ class OuraApiClient:
         try:
             return await self._async_get(url, params)
         except ClientResponseError as err:
-            # Return empty data for 401 errors (no permission/unsupported feature)
-            if err.status == 401:
-                _LOGGER.debug("Cardiovascular age data not available (401 Unauthorized) - may require re-authorization or unsupported by device")
+            if err.status == 401:  # Feature not available
                 return {"data": []}
             raise
 
@@ -285,59 +274,17 @@ class OuraApiClient:
 
     async def _async_get(self, url: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """Make GET request to Oura API."""
-        # Try to get token from async_ensure_token_valid first
-        try:
-            token = await self.session.async_ensure_token_valid()
-        except Exception as err:
-            _LOGGER.error("Error ensuring token is valid: %s", err, exc_info=True)
-            token = None
-        
-        # If that returns None, get it directly from the config entry
-        if token is None:
-            _LOGGER.debug("async_ensure_token_valid() returned None, getting token from entry.data")
-            token = self.entry.data.get("token")
-            
-        if token is None:
-            _LOGGER.error("Token is None - both async_ensure_token_valid() and entry.data['token'] returned None")
-            raise ValueError("OAuth2 token is None")
-        
-        if not isinstance(token, dict):
-            _LOGGER.error("Token is not a dict, it's a %s: %s", type(token), token)
-            raise ValueError(f"OAuth2 token is not a dict: {type(token)}")
-        
-        if 'access_token' not in token:
-            _LOGGER.error("Token dict missing 'access_token' key. Token keys: %s", list(token.keys()))
-            raise ValueError("OAuth2 token missing 'access_token'")
+        token = await self.session.async_ensure_token_valid()
         
         headers = {
             "Authorization": f"Bearer {token['access_token']}",
         }
         
-        _LOGGER.debug("Making request to %s with params %s", url, params)
-        
         try:
             async with self.client_session.get(url, headers=headers, params=params) as response:
-                # Check for 401 before raising to capture response body
-                if response.status == 401:
-                    try:
-                        error_body = await response.json()
-                        _LOGGER.debug("Received 401 Unauthorized from %s - Response: %s", url, error_body)
-                    except Exception:
-                        error_text = await response.text()
-                        _LOGGER.debug("Received 401 Unauthorized from %s - Response: %s", url, error_text)
-                
                 response.raise_for_status()
-                data = await response.json()
-                _LOGGER.debug("Received response from %s: %s items", url, len(data.get('data', [])) if isinstance(data, dict) else 'unknown')
-                return data
+                return await response.json()
         except ClientResponseError as err:
-            # Don't log 401 errors as ERROR - they're handled gracefully by calling methods
-            # for optional features (resilience, spo2, vo2_max, cardiovascular_age)
-            if err.status == 401:
-                _LOGGER.debug("401 error from %s - optional feature may not be available", url)
-            else:
+            if err.status != 401:  # 401 handled gracefully by callers for optional features
                 _LOGGER.error("Error fetching data from %s: %s", url, err)
-            raise
-        except Exception as err:
-            _LOGGER.error("Error fetching data from %s: %s", url, err)
             raise

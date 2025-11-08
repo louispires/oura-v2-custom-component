@@ -6,6 +6,13 @@ This release adds **comprehensive stress, resilience, SpO2, fitness, and sleep o
 
 ### 🧬 Code Quality & Maintainability Improvements
 
+#### Phase 4: Logging & Token Handling
+- **Cleaner Logs:** Removed excessive debug logging for production-ready output
+- **Simplified Token Handling:** Streamlined OAuth2 token management in API client
+- **Essential Logging Only:** Kept only critical info/error messages for operations
+- **Graceful 401 Handling:** Silent handling of unavailable features (SpO2, VO2 Max, etc.)
+- **Reduced Noise:** Removed redundant success/progress messages during normal operation
+
 #### Phase 3: Coordinator Refactoring
 - **Code Simplification:** Refactored `coordinator.py` from 252 to 241 lines (4.4% reduction)
 - **Method Extraction:** Split 162-line `_process_data` method into 12 focused methods for better maintainability
