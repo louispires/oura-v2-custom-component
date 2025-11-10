@@ -15,7 +15,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 After installation:
 
 1. **Create Oura Application**
-   - Go to [Oura Cloud](https://cloud.ouraring.com/applications)
+   - Go to [Oura Cloud](https://developer.ouraring.com/applications)
    - Create a new application
    - Save your Client ID and Client Secret
 

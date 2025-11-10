@@ -58,9 +58,9 @@ This guide walks you through installing and configuring the Oura Ring v2 integra
 
 ### Step 1: Create Oura Developer Account
 
-1. Go to [Oura Cloud](https://cloud.ouraring.com)
+1. Go to [Oura Cloud](https://developer.ouraring.com)
 2. Log in with your Oura account credentials
-3. Navigate to **Applications** or visit: https://cloud.ouraring.com/applications
+3. Navigate to **Applications** or visit: https://developer.ouraring.com/applications
 
 ### Step 2: Create OAuth Application
 

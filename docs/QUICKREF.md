@@ -2,9 +2,9 @@
 
 ## Configuration URLs
 
-- **Oura Cloud Dashboard**: https://cloud.ouraring.com
-- **OAuth Applications**: https://cloud.ouraring.com/applications
-- **API Documentation**: https://cloud.ouraring.com/v2/docs
+- **Oura Cloud Dashboard**: https://developer.ouraring.com
+- **OAuth Applications**: https://developer.ouraring.com/applications
+- **API Documentation**: https://developer.ouraring.com/v2/docs
 
 ## Home Assistant Paths
 
@@ -273,7 +273,7 @@ template:
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - **GitHub Issues**: https://github.com/louispires/oura-v2-custom-component/issues
 - **Home Assistant Docs**: https://www.home-assistant.io/integrations/
-- **Oura API Docs**: https://cloud.ouraring.com/v2/docs
+- **Oura API Docs**: https://developer.ouraring.com/v2/docs
 
 ## Version Information
 

@@ -416,7 +416,7 @@ This was the **first official release** of the modern Oura Ring custom integrati
 ### Configuration
 
 1. **Create Oura Application**
-   - Go to [Oura Cloud](https://cloud.ouraring.com/applications)
+   - Go to [Oura Cloud](https://developer.ouraring.com/applications)
    - Create a new application
    - Save your Client ID and Client Secret
 
@@ -462,7 +462,7 @@ Complete documentation is available in the repository:
 ## 🙏 CREDITS
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
-- Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
+- Oura Ring API: [Oura Cloud API Documentation](https://developer.ouraring.com/v2/docs)
 - Development assisted by: Claude Sonnet 4 (Anthropic AI)
 
 ---

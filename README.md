@@ -125,7 +125,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ### Step 1: Create Oura Application
 
-1. Go to [Oura Cloud](https://cloud.ouraring.com/applications)
+1. Go to [Oura Cloud](https://developer.ouraring.com/applications)
 2. Sign in with your Oura account
 3. Click "Create a New Application"
 4. Fill in the application details:
@@ -755,7 +755,7 @@ This project is licensed under the MIT License.
 ## Credits
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
-- Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
+- Oura Ring API: [Oura Cloud API Documentation](https://developer.ouraring.com/v2/docs)
 - v2.0.0 Modernization: Comprehensive refactoring to HA 2025.11 standards
 - Test Infrastructure: Docker-based testing with 39 automated tests
 - Development assisted by: Claude Sonnet 4.5 (Anthropic AI)

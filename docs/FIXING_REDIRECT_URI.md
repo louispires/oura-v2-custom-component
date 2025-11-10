@@ -16,7 +16,7 @@ You need to add BOTH redirect URIs to your Oura application:
 
 ### Step 1: Update Your Oura Application
 
-1. Go to: https://cloud.ouraring.com/applications
+1. Go to: https://developer.ouraring.com/applications
 2. Find your Home Assistant application
 3. Click Edit
 4. Update the Redirect URI field to include BOTH:
