@@ -1,4 +1,4 @@
-﻿"""Application credentials platform for Oura Ring."""
+"""Application credentials platform for Oura Ring."""
 from homeassistant.components.application_credentials import AuthorizationServer
 from homeassistant.core import HomeAssistant
 

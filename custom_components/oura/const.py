@@ -1,4 +1,4 @@
-﻿"""Constants for the Oura Ring integration."""
+"""Constants for the Oura Ring integration."""
 from datetime import timedelta
 from typing import Final
 

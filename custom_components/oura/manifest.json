@@ -5,10 +5,9 @@
   "config_flow": true,
   "dependencies": ["application_credentials", "recorder"],
   "documentation": "https://github.com/louispires/oura-v2-custom-component",
+  "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/louispires/oura-v2-custom-component/issues",
   "requirements": [],
-  "version": "2.0.0",
-  "integration_type": "service",
-  "icon": "mdi:ring"
+  "version": "2.0.0"
 }

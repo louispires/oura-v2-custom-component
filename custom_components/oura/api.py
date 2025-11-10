@@ -1,4 +1,4 @@
-﻿"""API client for Oura Ring."""
+"""API client for Oura Ring."""
 from __future__ import annotations
 
 import asyncio

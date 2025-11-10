@@ -1,4 +1,4 @@
-﻿"""Sensor platform for Oura Ring integration."""
+"""Sensor platform for Oura Ring integration."""
 from __future__ import annotations
 
 from homeassistant.components.sensor import SensorEntity

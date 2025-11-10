@@ -1,4 +1,4 @@
-﻿"""Config flow for Oura Ring integration."""
+"""Config flow for Oura Ring integration."""
 from __future__ import annotations
 
 import logging
