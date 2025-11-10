@@ -755,7 +755,7 @@ This project is licensed under the MIT License.
 ## Credits
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
-- Oura Ring API: [Oura Cloud API Documentation](https://developer.ouraring.com/v2/docs)
+- Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
 - v2.0.0 Modernization: Comprehensive refactoring to HA 2025.11 standards
 - Test Infrastructure: Docker-based testing with 39 automated tests
 - Development assisted by: Claude Sonnet 4.5 (Anthropic AI)

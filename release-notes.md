@@ -462,7 +462,7 @@ Complete documentation is available in the repository:
 ## 🙏 CREDITS
 
 - Original Oura Component: [nitobuendia/oura-custom-component](https://github.com/nitobuendia/oura-custom-component)
-- Oura Ring API: [Oura Cloud API Documentation](https://developer.ouraring.com/v2/docs)
+- Oura Ring API: [Oura Cloud API Documentation](https://cloud.ouraring.com/v2/docs)
 - Development assisted by: Claude Sonnet 4 (Anthropic AI)
 
 ---

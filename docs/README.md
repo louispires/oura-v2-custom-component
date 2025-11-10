@@ -21,7 +21,7 @@ Welcome to the Oura Ring v2 Custom Component documentation!
 
 - [Main README](../README.md)
 - [GitHub Issues](https://github.com/louispires/oura-v2-custom-component/issues)
-- [Oura API Documentation](https://developer.ouraring.com/v2/docs)
+- [Oura API Documentation](https://cloud.ouraring.com/v2/docs)
 - [Home Assistant Developer Docs](https://developers.home-assistant.io/)
 
 ---
