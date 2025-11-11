@@ -1,4 +1,40 @@
-﻿## 🎉 Oura Ring v2 Integration v2.0.0 - Production Ready!
+﻿## 🐛 Oura Ring v2 Integration v2.0.1 - Network Resilience
+
+This bugfix release improves integration resilience to transient network issues.
+
+## 🐛 BUG FIXES
+
+### Network Resilience Improvements
+- **Fixed**: All sensors becoming unavailable during transient network issues (DNS failures, timeouts)
+- **Solution**: Coordinator now retains last known sensor values when API is temporarily unreachable
+- **Impact**: Sensors maintain their values during network outages instead of showing "Unavailable"
+
+### Reduced Log Spam
+- **Fixed**: 44+ ERROR messages flooding logs during network issues
+- **Solution**: Network errors now logged as WARNING with single aggregated message when 50%+ endpoints fail
+- **Impact**: Cleaner logs with clear indication of network issues and retry timing
+
+### Smart Error Handling
+- Individual endpoint failures logged at DEBUG level when not systemic
+- Clear warning messages showing when next retry will occur
+- Automatic recovery when network connectivity is restored
+- Only shows error on first setup if API cannot be reached
+
+### Updated Developer Portal URLs
+- **Fixed**: Outdated Oura application management URLs
+- **Updated**: Application management now points to `https://developer.ouraring.com/applications`
+- **Note**: API documentation remains at `https://cloud.ouraring.com/v2/docs`
+
+## 🧪 TESTING & VALIDATION
+
+- ✅ All 39 automated tests passing
+- ✅ Hassfest validation: 0 invalid integrations
+- ✅ HACS compliance verified
+- ✅ Docker-based testing with Home Assistant 2025.11
+
+---
+
+## 🎉 Oura Ring v2 Integration v2.0.0 - Production Ready!
 
 This is a **major milestone release** marking the integration as **production-ready** with critical bug fixes, enhanced reliability, and comprehensive testing!
 

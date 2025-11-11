@@ -42,8 +42,39 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         try:
             # For regular updates, only fetch 1 day of data
             data = await self.api_client.async_get_data(days_back=1)
-            return self._process_data(data)
+            processed_data = self._process_data(data)
+            
+            # Check if we got any actual data back
+            # If all endpoints failed, processed_data will be empty
+            if not processed_data:
+                _LOGGER.warning(
+                    "No data returned from API (all endpoints failed). "
+                    "Keeping existing data if available. Will retry in %s minutes.",
+                    self.update_interval.total_seconds() / 60,
+                )
+                # If we have existing data, keep it
+                if self.data:
+                    return self.data
+                # If no existing data, this is a problem
+                raise UpdateFailed("No data available from API")
+            
+            return processed_data
+            
         except Exception as err:
+            # Log the error but keep existing data to maintain sensor states
+            # This handles transient network issues gracefully
+            _LOGGER.warning(
+                "Error communicating with API (will retry in %s minutes): %s",
+                self.update_interval.total_seconds() / 60,
+                err
+            )
+            
+            # If we have existing data, return it to keep sensors showing last known values
+            if self.data:
+                _LOGGER.debug("Keeping existing data due to transient error")
+                return self.data
+            
+            # If no existing data (first run), raise the error
             raise UpdateFailed(f"Error communicating with API: {err}") from err
     
     async def async_load_historical_data(self, days: int) -> None:
