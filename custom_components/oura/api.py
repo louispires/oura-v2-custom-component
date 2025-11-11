@@ -59,28 +59,64 @@ class OuraApiClient:
         )
 
         # Log any exceptions that occurred
+        # Count how many endpoints failed to determine if this is a systemic issue
+        failed_endpoints = 0
+        total_endpoints = 11
+        
         if isinstance(sleep_data, Exception):
-            _LOGGER.error("Error fetching sleep data: %s", sleep_data)
+            failed_endpoints += 1
         if isinstance(readiness_data, Exception):
-            _LOGGER.error("Error fetching readiness data: %s", readiness_data)
+            failed_endpoints += 1
         if isinstance(activity_data, Exception):
-            _LOGGER.error("Error fetching activity data: %s", activity_data)
+            failed_endpoints += 1
         if isinstance(heartrate_data, Exception):
-            _LOGGER.error("Error fetching heart rate data: %s", heartrate_data)
+            failed_endpoints += 1
         if isinstance(sleep_detail_data, Exception):
-            _LOGGER.error("Error fetching detailed sleep data: %s", sleep_detail_data)
+            failed_endpoints += 1
         if isinstance(stress_data, Exception):
-            _LOGGER.error("Error fetching stress data: %s", stress_data)
+            failed_endpoints += 1
         if isinstance(resilience_data, Exception):
-            _LOGGER.error("Error fetching resilience data: %s", resilience_data)
+            failed_endpoints += 1
         if isinstance(spo2_data, Exception):
-            _LOGGER.error("Error fetching SpO2 data: %s", spo2_data)
+            failed_endpoints += 1
         if isinstance(vo2_max_data, Exception):
-            _LOGGER.error("Error fetching VO2 Max data: %s", vo2_max_data)
+            failed_endpoints += 1
         if isinstance(cardiovascular_age_data, Exception):
-            _LOGGER.error("Error fetching cardiovascular age data: %s", cardiovascular_age_data)
+            failed_endpoints += 1
         if isinstance(sleep_time_data, Exception):
-            _LOGGER.error("Error fetching sleep time data: %s", sleep_time_data)
+            failed_endpoints += 1
+        
+        # If all or most endpoints failed, this is likely a network issue
+        if failed_endpoints >= total_endpoints * 0.5:  # 50% or more failed
+            _LOGGER.warning(
+                "Network connectivity issue: %d/%d API endpoints failed. "
+                "Will retry on next update cycle.",
+                failed_endpoints, total_endpoints
+            )
+        else:
+            # Log individual endpoint failures at debug level
+            if isinstance(sleep_data, Exception):
+                _LOGGER.debug("Error fetching sleep data: %s", sleep_data)
+            if isinstance(readiness_data, Exception):
+                _LOGGER.debug("Error fetching readiness data: %s", readiness_data)
+            if isinstance(activity_data, Exception):
+                _LOGGER.debug("Error fetching activity data: %s", activity_data)
+            if isinstance(heartrate_data, Exception):
+                _LOGGER.debug("Error fetching heart rate data: %s", heartrate_data)
+            if isinstance(sleep_detail_data, Exception):
+                _LOGGER.debug("Error fetching detailed sleep data: %s", sleep_detail_data)
+            if isinstance(stress_data, Exception):
+                _LOGGER.debug("Error fetching stress data: %s", stress_data)
+            if isinstance(resilience_data, Exception):
+                _LOGGER.debug("Error fetching resilience data: %s", resilience_data)
+            if isinstance(spo2_data, Exception):
+                _LOGGER.debug("Error fetching SpO2 data: %s", spo2_data)
+            if isinstance(vo2_max_data, Exception):
+                _LOGGER.debug("Error fetching VO2 Max data: %s", vo2_max_data)
+            if isinstance(cardiovascular_age_data, Exception):
+                _LOGGER.debug("Error fetching cardiovascular age data: %s", cardiovascular_age_data)
+            if isinstance(sleep_time_data, Exception):
+                _LOGGER.debug("Error fetching sleep time data: %s", sleep_time_data)
 
         return {
             "sleep": sleep_data if not isinstance(sleep_data, Exception) else {},
@@ -169,7 +205,7 @@ class OuraApiClient:
             try:
                 return await self._async_get(url, params)
             except Exception as err:
-                _LOGGER.error("Heart rate endpoint failed: %s", err)
+                _LOGGER.debug("Heart rate endpoint failed: %s", err)
                 # Return empty data instead of failing completely
                 return {"data": []}
 
@@ -309,5 +345,10 @@ class OuraApiClient:
             _LOGGER.error("Token error fetching data from %s: %s", url, err)
             raise
         except Exception as err:
-            _LOGGER.error("Unexpected error fetching data from %s: %s", url, err)
+            # Use warning for connection errors, error for other issues
+            log_msg = "Unexpected error fetching data from %s: %s"
+            if "Cannot connect" in str(err) or "Domain name not found" in str(err) or "Timeout" in str(err):
+                _LOGGER.warning(log_msg, url, err)
+            else:
+                _LOGGER.error(log_msg, url, err)
             raise

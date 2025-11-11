@@ -75,9 +75,15 @@ class OuraSensor(CoordinatorEntity[OuraDataUpdateCoordinator], SensorEntity):
 
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
+        """Return if entity is available.
+        
+        Sensor is available if:
+        1. We have data (even if last update failed due to transient error)
+        2. The sensor key exists in the data
+        3. The value is not None
+        """
         return (
-            self.coordinator.last_update_success
+            self.coordinator.data is not None
             and self._sensor_type in self.coordinator.data
             and self.coordinator.data[self._sensor_type] is not None
         )
