@@ -1,4 +1,45 @@
-﻿## 🐛 Oura Ring v2 Integration v2.0.1 - Network Resilience
+﻿## 🎉 Oura Ring v2 Integration v2.1.0 - Feature Release
+
+This feature release adds a new diagnostic sensor and improves documentation for easier installation!
+
+## ✨ NEW FEATURES
+
+### Low Battery Alert Sensor
+- **New Sensor**: `low_battery_alert` diagnostic sensor
+- **Data Source**: Extracted from Oura sleep data endpoint
+- **Type**: Boolean sensor indicating if battery was low during sleep
+- **Category**: Diagnostic (hidden from main UI by default)
+- **Icon**: `mdi:battery-alert`
+- **Default Value**: False when not present in API response
+- **Use Cases**: 
+  - Track ring battery alerts during sleep sessions
+  - Create automations for low battery notifications
+  - Better understand data quality issues related to battery level
+
+### Documentation Improvements
+- **HACS Default Repository**: Updated installation instructions to reflect that Oura Ring is now in HACS default repository
+- **Simplified Installation**: Removed custom repository instructions - now just search for "Oura Ring" in HACS
+- **Add Integration Button**: Added my.home-assistant.io badge for one-click integration setup
+- **Better User Experience**: Streamlined installation process for new users
+
+## 🧪 TESTING & VALIDATION
+
+- ✅ All 43 automated tests passing (4 new tests added)
+- ✅ Hassfest validation: 0 invalid integrations  
+- ✅ HACS compliance verified
+- ✅ Docker-based testing with Home Assistant 2025.11
+- ✅ New sensor extraction logic tested with True/False/missing values
+- ✅ Boolean sensor entity tests added
+
+## 📊 SENSOR COUNT UPDATE
+
+- **Previous version**: 43 sensors
+- **This version**: 44 sensors (+1 new diagnostic sensor)
+- **Total Sleep Sensors**: 14 (added Low Battery Alert)
+
+---
+
+## 🐛 Oura Ring v2 Integration v2.0.1 - Network Resilience
 
 This bugfix release improves integration resilience to transient network issues.
 
