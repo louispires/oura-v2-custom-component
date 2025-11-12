@@ -54,6 +54,7 @@ SENSOR_TYPES: Final = {
     "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     "rem_sleep_percentage": {"name": "REM Sleep Percentage", "icon": "mdi:percent", "unit": "%", "device_class": None, "state_class": "measurement", "entity_category": EntityCategory.DIAGNOSTIC},
     "time_in_bed": {"name": "Time in Bed", "icon": "mdi:bed-clock", "unit": "h", "device_class": "duration", "state_class": "total", "entity_category": None},
+    "low_battery_alert": {"name": "Low Battery Alert", "icon": "mdi:battery-alert", "unit": None, "device_class": None, "state_class": None, "entity_category": EntityCategory.DIAGNOSTIC},
     
     # Readiness sensors
     "readiness_score": {"name": "Readiness Score", "icon": "mdi:heart-pulse", "unit": None, "device_class": None, "state_class": "measurement", "entity_category": None},

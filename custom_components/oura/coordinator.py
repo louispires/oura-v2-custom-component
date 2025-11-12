@@ -180,6 +180,9 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # HRV during sleep
                 if average_hrv := latest_sleep_detail.get("average_hrv"):
                     processed["average_sleep_hrv"] = average_hrv
+                
+                # Low battery alert flag (always set, defaults to False)
+                processed["low_battery_alert"] = latest_sleep_detail.get("low_battery_alert", False)
     
     def _process_readiness(self, data: dict[str, Any], processed: dict[str, Any]) -> None:
         """Process readiness data (contributors are scores 1-100)."""
