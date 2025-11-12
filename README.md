@@ -1,7 +1,8 @@
 ﻿# Oura Ring v2 Custom Component for Home Assistant
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![Validate](https://github.com/louispires/oura-v2-custom-component/actions/workflows/validate.yml/badge.svg)](https://github.com/louispires/oura-v2-custom-component/actions/workflows/validate.yml)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/louispires/oura-v2-custom-component/validate.yml?logo=github&label=HACS%20validate)](https://github.com/louispires/oura-v2-custom-component/actions/workflows/validate.yml)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/louispires/oura-v2-custom-component/validate.yml?logo=github&label=HASSFEST%20validate)](https://github.com/louispires/oura-v2-custom-component/actions/workflows/validate.yml)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow.svg)](https://buymeacoffee.com/louispires)
 
 A modern Home Assistant custom integration for Oura Ring using the v2 API with OAuth2 authentication.
