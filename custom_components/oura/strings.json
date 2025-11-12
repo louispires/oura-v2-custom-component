@@ -73,7 +73,8 @@
       "vo2_max": {"name": "VO2 max"},
       "cardiovascular_age": {"name": "Cardiovascular age"},
       "optimal_bedtime_start": {"name": "Optimal bedtime start"},
-      "optimal_bedtime_end": {"name": "Optimal bedtime end"}
+      "optimal_bedtime_end": {"name": "Optimal bedtime end"},
+      "low_battery_alert": {"name": "Low battery alert"}
     }
   }
 }

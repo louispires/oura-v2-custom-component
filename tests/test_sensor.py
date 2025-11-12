@@ -110,3 +110,32 @@ def test_sensor_unavailable_when_data_missing(mock_coordinator):
     )
     
     assert sensor.available is False
+
+
+def test_boolean_sensor_true_value(mock_coordinator):
+    """Test that boolean sensor correctly exposes True value."""
+    mock_coordinator.data = {"low_battery_alert": True}
+    
+    sensor = OuraSensor(
+        coordinator=mock_coordinator,
+        sensor_type="low_battery_alert",
+        sensor_info=SENSOR_TYPES["low_battery_alert"],
+    )
+    
+    assert sensor.native_value is True
+    assert sensor.available is True
+
+
+def test_boolean_sensor_false_value(mock_coordinator):
+    """Test that boolean sensor correctly exposes False value."""
+    mock_coordinator.data = {"low_battery_alert": False}
+    
+    sensor = OuraSensor(
+        coordinator=mock_coordinator,
+        sensor_type="low_battery_alert",
+        sensor_info=SENSOR_TYPES["low_battery_alert"],
+    )
+    
+    assert sensor.native_value is False
+    assert sensor.available is True
+

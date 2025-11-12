@@ -14,7 +14,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 ## Features
 
 - **OAuth2 Authentication**: Secure authentication using Home Assistant's application credentials
-- **Comprehensive Data**: 43 sensors covering all Oura Ring metrics including sleep, readiness, activity, stress, resilience, and more
+- **Comprehensive Data**: 44 sensors covering all Oura Ring metrics including sleep, readiness, activity, stress, resilience, and more
 - **HA 2025.11 Compliant**: Modern entity naming, translation keys, entity categories, and proper state classes
 - **Historical Data Loading**: Automatically loads 14 days of historical data on first setup (configurable 1-90 days)
 - **Entity Categories**: Diagnostic sensors properly categorized for better UI organization
@@ -26,7 +26,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 
 ## Available Sensors
 
-### Sleep Sensors (13)
+### Sleep Sensors (14)
 - Sleep Score
 - Total Sleep Duration
 - Deep Sleep Duration
@@ -40,6 +40,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - Deep Sleep Percentage
 - REM Sleep Percentage
 - Time in Bed
+- Low Battery Alert
 
 ### Readiness Sensors (4)
 - Readiness Score
@@ -91,7 +92,7 @@ A modern Home Assistant custom integration for Oura Ring using the v2 API with O
 - Optimal Bedtime Start ⚠️
 - Optimal Bedtime End ⚠️
 
-**Total: 43 sensors**
+**Total: 44 sensors**
 
 **Important Notes**:
 - Sensors marked with ⚠️ may be **unavailable** for new Oura Ring users (typically the first few weeks of usage). The Oura API does not provide data for these sensors until sufficient baseline data has been collected. This is normal behavior and they may become available over time as you continue using your ring.

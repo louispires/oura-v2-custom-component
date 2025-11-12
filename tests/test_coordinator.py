@@ -85,6 +85,53 @@ def test_process_sleep_details_with_durations():
     assert processed["rem_sleep_percentage"] == 25.0
 
 
+def test_process_sleep_details_low_battery_alert():
+    """Test that low_battery_alert is extracted from sleep_detail data."""
+    coordinator = MockCoordinator()
+    
+    # Test with True value
+    data_true = {
+        "sleep_detail": {
+            "data": [
+                {
+                    "low_battery_alert": True
+                }
+            ]
+        }
+    }
+    processed = {}
+    coordinator._process_sleep_details(data_true, processed)
+    assert processed["low_battery_alert"] is True
+    
+    # Test with False value
+    data_false = {
+        "sleep_detail": {
+            "data": [
+                {
+                    "low_battery_alert": False
+                }
+            ]
+        }
+    }
+    processed = {}
+    coordinator._process_sleep_details(data_false, processed)
+    assert processed["low_battery_alert"] is False
+    
+    # Test with missing value (should default to False)
+    data_missing = {
+        "sleep_detail": {
+            "data": [
+                {
+                    "total_sleep_duration": 28800
+                }
+            ]
+        }
+    }
+    processed = {}
+    coordinator._process_sleep_details(data_missing, processed)
+    assert processed["low_battery_alert"] is False
+
+
 def test_process_readiness():
     """Test processing of readiness data."""
     coordinator = MockCoordinator()

@@ -18,12 +18,26 @@ def test_entity_categories_assigned():
         "breathing_disturbance_index",
         "optimal_bedtime_start",
         "optimal_bedtime_end",
+        "low_battery_alert",
     ]
     
     for sensor_key in diagnostic_sensors:
         assert sensor_key in SENSOR_TYPES, f"Sensor {sensor_key} not in SENSOR_TYPES"
         assert SENSOR_TYPES[sensor_key].get("entity_category") == "diagnostic", \
             f"Sensor {sensor_key} should have diagnostic category"
+
+
+def test_low_battery_alert_metadata():
+    """Test that low_battery_alert sensor has correct metadata."""
+    assert "low_battery_alert" in SENSOR_TYPES, "low_battery_alert sensor should exist"
+    
+    sensor_info = SENSOR_TYPES["low_battery_alert"]
+    assert sensor_info["name"] == "Low Battery Alert", "Name should be 'Low Battery Alert'"
+    assert sensor_info["icon"] == "mdi:battery-alert", "Icon should be battery alert"
+    assert sensor_info["unit"] is None, "Boolean sensor should have no unit"
+    assert sensor_info["device_class"] is None, "Boolean sensor should have no device_class"
+    assert sensor_info["state_class"] is None, "Boolean sensor should have no state_class"
+    assert sensor_info.get("entity_category") == "diagnostic", "Should be diagnostic category"
 
 
 def test_state_classes_improved():
