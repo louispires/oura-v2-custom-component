@@ -23,3 +23,30 @@ jobs:
         uses: hacs/action@main
         with:
           category: integration
+
+  validate-python:
+    runs-on: ubuntu-latest
+    name: Validate Python code
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pylint
+          pip install pymodbus==3.6.8
+          pip install homeassistant
+
+      - name: Lint with flake8
+        run: |
+          # Stop the build if there are Python syntax errors or undefined names
+          flake8 custom_components/oura --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats all errors as warnings
+          flake8 custom_components/oura --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        continue-on-error: true
