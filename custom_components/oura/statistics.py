@@ -13,7 +13,9 @@ from homeassistant.components.recorder.statistics import (
     async_add_external_statistics,
     StatisticData,
     StatisticMetaData,
+    StatisticMeanType,
 )
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.core import HomeAssistant
 from homeassistant.const import (
     UnitOfTemperature,
@@ -24,6 +26,30 @@ from homeassistant.const import (
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _get_unit_class(unit: str | None) -> str | None:
+    """Map unit of measurement to device class for statistics.
+    
+    Required for Home Assistant 2026.11+ compatibility.
+    Returns the appropriate device class string based on the unit,
+    or None if the unit doesn't map to a standard device class.
+    """
+    if unit is None:
+        return None
+    
+    # Map standard HA unit constants to device classes
+    if unit in (UnitOfTime.HOURS, UnitOfTime.MINUTES, UnitOfTime.SECONDS):
+        return SensorDeviceClass.DURATION
+    if unit == UnitOfTemperature.CELSIUS:
+        return SensorDeviceClass.TEMPERATURE
+    if unit in (UnitOfEnergy.KILO_CALORIE, UnitOfEnergy.KILO_WATT_HOUR):
+        return SensorDeviceClass.ENERGY
+    
+    # Custom units without standard device classes
+    # These include: "score", "bpm", "ms", "steps", "MET·min", 
+    # "%", "ml/kg/min", "years"
+    return None
 
 # Statistics metadata for all Oura sensors
 STATISTICS_METADATA = {
@@ -339,13 +365,28 @@ async def _create_statistic(
     
     statistic_id = f"{DOMAIN}:{sensor_key}"
     
+    # Determine mean_type based on sensor characteristics
+    if not metadata["has_mean"]:
+        mean_type = StatisticMeanType.NONE
+    elif sensor_key in ("optimal_bedtime_start", "optimal_bedtime_end"):
+        # Time of day values should use circular mean for proper averaging
+        mean_type = StatisticMeanType.CIRCULAR
+    else:
+        # All other numeric sensors use arithmetic mean
+        mean_type = StatisticMeanType.ARITHMETIC
+    
+    # Get unit_class for HA 2026.11+ compatibility
+    unit_class = _get_unit_class(metadata["unit"])
+    
     # Create metadata
     stat_metadata = StatisticMetaData(
         has_mean=metadata["has_mean"],
         has_sum=metadata["has_sum"],
+        mean_type=mean_type,
         name=metadata["name"],
         source=DOMAIN,
         statistic_id=statistic_id,
+        unit_class=unit_class,
         unit_of_measurement=metadata["unit"],
     )
     

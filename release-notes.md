@@ -23,8 +23,15 @@ This feature release significantly extends historical data capabilities and impr
 
 - Heartrate endpoint now respects Oura's 30-day maximum range per request
 - Historical data loading converts months to days automatically (30 days per month)
+- **Statistics Compatibility**: Added `unit_class` parameter to statistics metadata for Home Assistant 2026.11+ forward compatibility
+- **Mean Type Support**: Added proper `mean_type` configuration for statistics (arithmetic, circular, none)
+- **Device Class Mapping**: Automatic mapping of sensor units to appropriate device classes (duration, temperature, energy)
 - Updated configuration flow to use month-based validation
 - All strings and translations updated to reflect month-based configuration
+- **Added `mean_type` parameter**: Now properly specifies `StatisticMeanType` for all statistics (required for Home Assistant 2026.11+)
+  - `ARITHMETIC`: For all numeric sensors (scores, durations, heart rates, etc.)
+  - `CIRCULAR`: For time-of-day sensors (optimal bedtime start/end)
+  - `NONE`: For text/categorical sensors (stress summary, resilience level)
 
 ## 🧪 TESTING & VALIDATION
 
