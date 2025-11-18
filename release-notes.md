@@ -1,4 +1,55 @@
-﻿## 🎉 Oura Ring v2 Integration v2.1.0 - Feature Release
+﻿## 🎉 Oura Ring v2 Integration v2.2.0 - Extended Historical Data
+
+This feature release significantly extends historical data capabilities and improves API efficiency!
+
+## ✨ NEW FEATURES
+
+### Extended Historical Data Support
+- **Increased Maximum**: Historical data now supports up to **48 months (4 years)** of data
+- **Month-Based Configuration**: Switched from days to months for easier configuration
+- **Default Changed**: Default historical data load changed from 14 days to **3 months (90 days)**
+- **Better User Experience**: Configure in intuitive monthly increments (1-48 months)
+- **Use Cases**: 
+  - Import years of historical health data when first setting up
+  - Analyze long-term trends and patterns
+  - Maintain comprehensive health history in Home Assistant
+
+### API Efficiency Improvements
+- **Optimized Batching**: Heartrate data batching increased from 7 days to 30 days per request
+- **Fewer API Calls**: Reduced API calls when fetching large historical datasets
+- **Example Impact**: Fetching 90 days of data now requires only 3 heartrate requests instead of 13
+
+## 🔧 TECHNICAL IMPROVEMENTS
+
+- Heartrate endpoint now respects Oura's 30-day maximum range per request
+- Historical data loading converts months to days automatically (30 days per month)
+- **Statistics Compatibility**: Added `unit_class` parameter to statistics metadata for Home Assistant 2026.11+ forward compatibility
+- **Mean Type Support**: Added proper `mean_type` configuration for statistics (arithmetic, circular, none)
+- **Device Class Mapping**: Automatic mapping of sensor units to appropriate device classes (duration, temperature, energy)
+- Updated configuration flow to use month-based validation
+- All strings and translations updated to reflect month-based configuration
+- **Added `mean_type` parameter**: Now properly specifies `StatisticMeanType` for all statistics (required for Home Assistant 2026.11+)
+  - `ARITHMETIC`: For all numeric sensors (scores, durations, heart rates, etc.)
+  - `CIRCULAR`: For time-of-day sensors (optimal bedtime start/end)
+  - `NONE`: For text/categorical sensors (stress summary, resilience level)
+
+## 🧪 TESTING & VALIDATION
+
+- ✅ All 43 automated tests passing
+- ✅ Hassfest validation: 0 invalid integrations  
+- ✅ HACS compliance verified
+- ✅ Docker-based testing with Home Assistant 2025.11
+- ✅ Historical data loading validated with extended timeframes
+
+## 📊 CONFIGURATION UPDATES
+
+- **Previous**: 1-90 days (default 14 days)
+- **Current**: 1-48 months (default 3 months, ~90 days)
+- **Maximum**: Up to 4 years of historical data
+
+---
+
+## 🎉 Oura Ring v2 Integration v2.1.0 - Feature Release
 
 This feature release adds a new diagnostic sensor and improves documentation for easier installation!
 

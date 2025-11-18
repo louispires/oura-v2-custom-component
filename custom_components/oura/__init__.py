@@ -12,9 +12,9 @@ from .api import OuraApiClient
 from .const import (
     DOMAIN,
     CONF_UPDATE_INTERVAL,
-    CONF_HISTORICAL_DAYS,
+    CONF_HISTORICAL_MONTHS,
     DEFAULT_UPDATE_INTERVAL,
-    DEFAULT_HISTORICAL_DAYS,
+    DEFAULT_HISTORICAL_MONTHS,
 )
 from .coordinator import OuraDataUpdateCoordinator
 
@@ -54,10 +54,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     is_first_setup = entry.entry_id not in hass.data[DOMAIN]
     
     if is_first_setup:
-        # Get historical days from options, or use default
-        historical_days = entry.options.get(CONF_HISTORICAL_DAYS, DEFAULT_HISTORICAL_DAYS)
+        # Get historical months from options, or use default
+        historical_months = entry.options.get(CONF_HISTORICAL_MONTHS, DEFAULT_HISTORICAL_MONTHS)
+        # Convert months to days (approximate: 30 days per month)
+        historical_days = historical_months * 30
         
-        _LOGGER.info("Loading %d days of historical data...", historical_days)
+        _LOGGER.info("Loading %d months (%d days) of historical data...", historical_months, historical_days)
         
         # Load historical data before first refresh
         try:
