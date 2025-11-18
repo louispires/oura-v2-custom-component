@@ -9,7 +9,7 @@ ATTRIBUTION: Final = "Data provided by Oura Ring"
 
 # Configuration
 CONF_UPDATE_INTERVAL: Final = "update_interval"
-CONF_HISTORICAL_DAYS: Final = "historical_days"
+CONF_HISTORICAL_MONTHS: Final = "historical_months"
 
 # OAuth2 Constants
 OAUTH2_AUTHORIZE: Final = "https://cloud.ouraring.com/oauth/authorize"
@@ -34,9 +34,9 @@ MIN_UPDATE_INTERVAL: Final = 1  # minimum 1 minute to respect API rate limits
 MAX_UPDATE_INTERVAL: Final = 60  # maximum 1 hour
 
 # Historical data loading
-DEFAULT_HISTORICAL_DAYS: Final = 14  # Fetch 14 days by default (safe for new users)
-MIN_HISTORICAL_DAYS: Final = 1  # Minimum 1 day
-MAX_HISTORICAL_DAYS: Final = 90  # Maximum 90 days (Oura API limit)
+DEFAULT_HISTORICAL_MONTHS: Final = 3  # Fetch 3 months by default (90 days)
+MIN_HISTORICAL_MONTHS: Final = 1  # Minimum 1 month
+MAX_HISTORICAL_MONTHS: Final = 48  # Maximum 48 months (4 years)
 
 # Sensor types
 SENSOR_TYPES: Final = {
