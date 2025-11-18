@@ -231,8 +231,10 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if stress_data := data.get("stress", {}).get("data"):
             if stress_data and len(stress_data) > 0:
                 latest_stress = stress_data[-1]
-                processed["stress_high_duration"] = latest_stress.get("stress_high_duration")
-                processed["recovery_high_duration"] = latest_stress.get("recovery_high_duration")
+                if (stress_high := latest_stress.get("stress_high")) is not None:
+                    processed["stress_high_duration"] = stress_high / 60
+                if (recovery_high := latest_stress.get("recovery_high")) is not None:
+                    processed["recovery_high_duration"] = recovery_high / 60
                 processed["stress_day_summary"] = latest_stress.get("day_summary")
     
     def _process_resilience(self, data: dict[str, Any], processed: dict[str, Any]) -> None:
@@ -241,10 +243,11 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if resilience_data and len(resilience_data) > 0:
                 latest_resilience = resilience_data[-1]
                 processed["resilience_level"] = latest_resilience.get("level")
-                processed["sleep_recovery_score"] = latest_resilience.get("sleep_recovery_score")
-                processed["daytime_recovery_score"] = latest_resilience.get("daytime_recovery_score")
+                
                 if contributors := latest_resilience.get("contributors"):
-                    processed["stress_resilience_score"] = contributors.get("activity_score")
+                    processed["sleep_recovery_score"] = contributors.get("sleep_recovery")
+                    processed["daytime_recovery_score"] = contributors.get("daytime_recovery")
+                    processed["stress_resilience_score"] = contributors.get("stress")
     
     def _process_spo2(self, data: dict[str, Any], processed: dict[str, Any]) -> None:
         """Process SpO2 data (blood oxygen - Gen3 and Oura Ring 4 only)."""
@@ -267,12 +270,66 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if cardiovascular_age_data := data.get("cardiovascular_age", {}).get("data"):
             if cardiovascular_age_data and len(cardiovascular_age_data) > 0:
                 latest_cv_age = cardiovascular_age_data[-1]
-                processed["cardiovascular_age"] = latest_cv_age.get("age")
+                processed["cardiovascular_age"] = latest_cv_age.get("vascular_age")
     
     def _process_sleep_time(self, data: dict[str, Any], processed: dict[str, Any]) -> None:
         """Process sleep time recommendations (optimal bedtime windows)."""
         if sleep_time_data := data.get("sleep_time", {}).get("data"):
             if sleep_time_data and len(sleep_time_data) > 0:
                 latest_sleep_time = sleep_time_data[-1]
-                processed["optimal_bedtime_start"] = latest_sleep_time.get("optimal_bedtime_start")
-                processed["optimal_bedtime_end"] = latest_sleep_time.get("optimal_bedtime_end")
+                
+                if optimal_bedtime := latest_sleep_time.get("optimal_bedtime"):
+                    # Offsets are in seconds from midnight
+                    # We need to convert them to a timestamp or time string
+                    # For now, let's store the raw offsets or convert if needed
+                    # The sensor definition expects a timestamp device class, but that requires a full datetime
+                    # Given these are offsets from midnight of the 'day', we can construct a datetime
+                    
+                    day_str = latest_sleep_time.get("day")
+                    day_tz = optimal_bedtime.get("day_tz", 0)
+                    start_offset = optimal_bedtime.get("start_offset")
+                    end_offset = optimal_bedtime.get("end_offset")
+                    
+                    if day_str and start_offset is not None:
+                        # Construct approximate datetime for start
+                        # Note: This is a simplification. Ideally we'd use the timezone info.
+                        # But for Home Assistant timestamp sensor, we usually want a UTC ISO string.
+                        # Since we don't have easy timezone handling here without external libs,
+                        # and the offsets are from midnight, we might need to be careful.
+                        # However, the previous implementation expected a value.
+                        # Let's try to provide the offset in seconds if the sensor supports it, 
+                        # or maybe just the raw value if that's what was intended.
+                        # Looking at const.py, device_class is "timestamp".
+                        
+                        # Let's try to construct a proper ISO string if possible, 
+                        # or just pass the offset if we can't.
+                        # Actually, let's look at how we can make this useful.
+                        # If we just return the offset, it's not a timestamp.
+                        
+                        # Let's parse the day
+                        from datetime import datetime
+                        try:
+                            date_obj = datetime.strptime(day_str, "%Y-%m-%d")
+                            # Add offsets (which are seconds from midnight)
+                            # Note: day_tz is offset from GMT. 
+                            # If we want UTC time: Local = GMT + offset => GMT = Local - offset
+                            # The offsets are from midnight local time? 
+                            # "Start offset from midnight in second"
+                            # If I have 2025-11-10 00:00:00 Local
+                            # And start_offset is -3600 (23:00 previous day)
+                            # Then local start is 2025-11-09 23:00:00
+                            # To get UTC, we subtract the timezone offset.
+                            
+                            start_dt = date_obj + timedelta(seconds=start_offset) - timedelta(seconds=day_tz)
+                            end_dt = date_obj + timedelta(seconds=end_offset) - timedelta(seconds=day_tz)
+                            
+                            # Ensure we have timezone aware datetime for HA
+                            # Since we calculated UTC, set it to UTC
+                            from datetime import timezone
+                            start_dt = start_dt.replace(tzinfo=timezone.utc)
+                            end_dt = end_dt.replace(tzinfo=timezone.utc)
+                            
+                            processed["optimal_bedtime_start"] = start_dt
+                            processed["optimal_bedtime_end"] = end_dt
+                        except Exception as e:
+                            _LOGGER.warning("Error calculating sleep time: %s", e)

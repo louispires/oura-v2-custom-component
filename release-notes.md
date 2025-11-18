@@ -1,4 +1,34 @@
-﻿## 🎉 Oura Ring v2 Integration v2.2.0 - Extended Historical Data
+﻿## 🎉 Oura Ring v2 Integration v2.3.0 - Heart Health Scope
+
+This release adds support for the new `heart_health` scope and requires user action to enable.
+
+## ⚠️ ACTION REQUIRED
+
+**To enable the new features in this release, you must:**
+
+1. **Update Developer Portal**: Go to [Oura Developer Portal](https://developer.ouraring.com/applications), `View Details` of your application, `Edit` the application, and select `Heart Health` under Scopes.
+2. Check `I agree to the Oura API Agreement`
+3. Select `Save Changes`
+4. **Re-authenticate**: In Home Assistant, go to Settings > Devices & Services > Oura Ring, and delete and re-add the integration to grant the new permission.
+5. Ensure that you see `Heart Health Data (VO2 Max, CVA)` and it is selected
+
+## ✨ NEW FEATURES
+
+- **Heart Health Scope**: Added support for the `heart_health` OAuth2 scope to access cardiovascular health data.
+
+## 🔧 TECHNICAL IMPROVEMENTS
+
+- Updated OAuth2 scopes list to include `heart_health`.
+
+## 🧪 TESTING & VALIDATION
+
+- ✅ All automated tests passing
+- ✅ Hassfest validation passed
+- ✅ HACS compliance verified
+
+---
+
+## 🎉 Oura Ring v2 Integration v2.2.0 - Extended Historical Data
 
 This feature release significantly extends historical data capabilities and improves API efficiency!
 

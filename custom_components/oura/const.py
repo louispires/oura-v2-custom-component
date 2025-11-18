@@ -25,6 +25,7 @@ OAUTH2_SCOPES: Final = [
     "spo2",
     "ring_configuration",
     "stress",
+    "heart_health",
 ]
 API_BASE_URL: Final = "https://api.ouraring.com/v2/usercollection"
 
