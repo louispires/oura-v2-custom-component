@@ -14,7 +14,6 @@ from homeassistant.components.recorder.statistics import (
     StatisticData,
     StatisticMetaData,
 )
-from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.core import HomeAssistant
 from homeassistant.const import (
     UnitOfTemperature,
@@ -348,7 +347,6 @@ async def _create_statistic(
         source=DOMAIN,
         statistic_id=statistic_id,
         unit_of_measurement=metadata["unit"],
-        unit_class=SensorDeviceClass.MEASUREMENT if metadata["has_mean"] else None,
     )
     
     # Create data points

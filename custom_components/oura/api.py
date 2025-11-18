@@ -162,7 +162,7 @@ class OuraApiClient:
     async def _async_get_heartrate(self, start_date: datetime.date, end_date: datetime.date) -> dict[str, Any]:
         """Get heart rate data.
         
-        Note: The heartrate endpoint has a maximum range of 7 days.
+        Note: The heartrate endpoint has a maximum range of 30 days.
         For historical data requests, we'll batch the requests.
         """
         url = f"{API_BASE_URL}/heartrate"
@@ -170,13 +170,13 @@ class OuraApiClient:
         # Calculate the number of days in the range
         days_range = (end_date - start_date).days
         
-        # If range is > 7 days, batch the requests
-        if days_range > 7:
+        # If range is > 30 days, batch the requests
+        if days_range > 30:
             all_data = []
             current_start = start_date
             
             while current_start < end_date:
-                current_end = min(current_start + timedelta(days=7), end_date)
+                current_end = min(current_start + timedelta(days=30), end_date)
                 params = {
                     "start_datetime": f"{current_start.isoformat()}T00:00:00",
                     "end_datetime": f"{current_end.isoformat()}T23:59:59",
@@ -196,7 +196,7 @@ class OuraApiClient:
             
             return {"data": all_data}
         else:
-            # Range is 7 days or less, single request
+            # Range is 30 days or less, single request
             params = {
                 "start_datetime": f"{start_date.isoformat()}T00:00:00",
                 "end_datetime": f"{end_date.isoformat()}T23:59:59",
