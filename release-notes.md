@@ -626,3 +626,16 @@ Complete documentation is available in the repository:
 ---
 
 **Enjoy tracking your health data with Home Assistant!** 💪
+
+## 🧪 Oura Ring v2 Integration v2.3.1b1 - Historical Data Fix (Beta)
+
+This is a **BETA** release to fix the historical data linking issue.
+
+## 🐛 BUG FIXES
+
+### Historical Data Linking
+- **Fixed**: Historical data imported during setup was not visible in sensor history graphs.
+- **Solution**: Updated statistics import to correctly link data to sensor entities (`sensor.oura_ring_*`) instead of internal IDs.
+- **Impact**: Historical data charts should now populate correctly for new installations.
+
+---

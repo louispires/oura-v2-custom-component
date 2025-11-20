@@ -89,7 +89,7 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             
             # Import historical data as long-term statistics
             try:
-                await async_import_statistics(self.hass, historical_data)
+                await async_import_statistics(self.hass, historical_data, self.entry)
                 _LOGGER.info("Historical data loaded successfully")
             except Exception as stats_err:
                 _LOGGER.error("Failed to import statistics: %s", stats_err)

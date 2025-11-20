@@ -16,7 +16,9 @@ from homeassistant.components.recorder.statistics import (
     StatisticMeanType,
 )
 from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.const import (
     UnitOfTemperature,
     UnitOfTime,
@@ -195,12 +197,14 @@ DATA_SOURCE_CONFIG = {
 async def async_import_statistics(
     hass: HomeAssistant,
     data: dict[str, Any],
+    entry: ConfigEntry,
 ) -> None:
     """Import historical Oura data as long-term statistics.
     
     Args:
         hass: Home Assistant instance
         data: Historical data from Oura API
+        entry: Config entry for unique ID generation
     """
     _LOGGER.info("Starting statistics import from historical data")
     
@@ -216,13 +220,13 @@ async def async_import_statistics(
         if custom_processor := config.get("custom_processor"):
             processor_func = globals().get(custom_processor)
             if processor_func:
-                stats_count = await processor_func(hass, source_data)
+                stats_count = await processor_func(hass, source_data, entry)
                 total_stats += stats_count
                 _LOGGER.debug("Imported %d %s statistics", stats_count, source_key)
             continue
         
         # Use generic processor
-        stats_count = await _process_generic_statistics(hass, source_data, config)
+        stats_count = await _process_generic_statistics(hass, source_data, config, entry)
         total_stats += stats_count
         _LOGGER.debug("Imported %d %s statistics", stats_count, source_key)
     
@@ -233,6 +237,7 @@ async def _process_generic_statistics(
     hass: HomeAssistant,
     data_list: list[dict[str, Any]],
     config: dict[str, Any],
+    entry: ConfigEntry,
 ) -> int:
     """Process data using generic configuration-driven approach.
     
@@ -240,6 +245,7 @@ async def _process_generic_statistics(
         hass: Home Assistant instance
         data_list: List of data entries from API
         config: Configuration with mappings and computed fields
+        entry: Config entry for unique ID generation
     
     Returns:
         Number of statistics imported
@@ -255,14 +261,14 @@ async def _process_generic_statistics(
         sensor_data[computed["sensor_key"]] = []
     
     # Process each data entry
-    for entry in data_list:
-        timestamp = _parse_date_to_timestamp(entry.get("day"))
+    for entry_data in data_list:
+        timestamp = _parse_date_to_timestamp(entry_data.get("day"))
         if not timestamp:
             continue
         
         # Process direct mappings
         for mapping in config.get("mappings", []):
-            value = _get_nested_value(entry, mapping["api_path"])
+            value = _get_nested_value(entry_data, mapping["api_path"])
             if value is not None:
                 # Apply transformation if specified
                 if transform := mapping.get("transform"):
@@ -275,7 +281,7 @@ async def _process_generic_statistics(
         
         # Process computed fields
         for computed in config.get("computed", []):
-            value = computed["compute"](entry)
+            value = computed["compute"](entry_data)
             if value is not None:
                 sensor_data[computed["sensor_key"]].append({
                     "timestamp": timestamp,
@@ -285,7 +291,7 @@ async def _process_generic_statistics(
     # Import statistics for each sensor
     for sensor_key, data_points in sensor_data.items():
         if data_points:
-            await _create_statistic(hass, sensor_key, data_points)
+            await _create_statistic(hass, sensor_key, data_points, entry)
             stats_count += len(data_points)
     
     return stats_count
@@ -294,6 +300,7 @@ async def _process_generic_statistics(
 async def _process_heartrate_statistics(
     hass: HomeAssistant,
     heartrate_data: list[dict[str, Any]],
+    entry: ConfigEntry,
 ) -> int:
     """Process heart rate data with special daily aggregation logic.
     
@@ -305,10 +312,10 @@ async def _process_heartrate_statistics(
     # Group heart rate readings by day
     daily_readings: dict[str, list[int]] = {}
     
-    for entry in heartrate_data:
-        if bpm := entry.get("bpm"):
+    for data_entry in heartrate_data:
+        if bpm := data_entry.get("bpm"):
             # Extract date from timestamp
-            timestamp_str = entry.get("timestamp", "")
+            timestamp_str = data_entry.get("timestamp", "")
             if timestamp_str:
                 day = timestamp_str.split("T")[0]
                 if day not in daily_readings:
@@ -343,7 +350,7 @@ async def _process_heartrate_statistics(
     # Import statistics
     for sensor_key, data_points in sensor_data.items():
         if data_points:
-            await _create_statistic(hass, sensor_key, data_points)
+            await _create_statistic(hass, sensor_key, data_points, entry)
             stats_count += len(data_points)
     
     return stats_count
@@ -353,6 +360,7 @@ async def _create_statistic(
     hass: HomeAssistant,
     sensor_key: str,
     data_points: list[dict[str, Any]],
+    entry: ConfigEntry,
 ) -> None:
     """Create and import a statistic for a sensor."""
     if not data_points:
@@ -363,7 +371,19 @@ async def _create_statistic(
         _LOGGER.warning("No metadata found for sensor: %s", sensor_key)
         return
     
-    statistic_id = f"{DOMAIN}:{sensor_key}"
+    # Hybrid approach for statistic_id
+    # 1. Try to find existing entity in registry
+    # 2. Fallback to default naming convention if not found
+    registry = er.async_get(hass)
+    unique_id = f"{entry.entry_id}_{sensor_key}"
+    entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
+    
+    if entity_id:
+        statistic_id = entity_id
+    else:
+        # Fallback for fresh installs where entities don't exist yet
+        # Matches the default entity ID format: sensor.oura_ring_{sensor_key}
+        statistic_id = f"sensor.oura_ring_{sensor_key}"
     
     # Determine mean_type based on sensor characteristics
     if not metadata["has_mean"]:
