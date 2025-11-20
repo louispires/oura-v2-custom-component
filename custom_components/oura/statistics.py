@@ -11,6 +11,7 @@ from typing import Any, Callable
 
 from homeassistant.components.recorder.statistics import (
     async_add_external_statistics,
+    async_import_statistics as async_import_statistics_ha,
     StatisticData,
     StatisticMetaData,
     StatisticMeanType,
@@ -385,6 +386,16 @@ async def _create_statistic(
         # Matches the default entity ID format: sensor.oura_ring_{sensor_key}
         statistic_id = f"sensor.oura_ring_{sensor_key}"
     
+    # Determine source and import method
+    # If statistic_id has a colon, it's an external statistic (domain:name)
+    # If not, it's an entity ID (sensor.name), so we use the recorder source
+    if ":" in statistic_id:
+        source = DOMAIN
+        import_func = async_add_external_statistics
+    else:
+        source = "recorder"
+        import_func = async_import_statistics_ha
+
     # Determine mean_type based on sensor characteristics
     if not metadata["has_mean"]:
         mean_type = StatisticMeanType.NONE
@@ -404,7 +415,7 @@ async def _create_statistic(
         has_sum=metadata["has_sum"],
         mean_type=mean_type,
         name=metadata["name"],
-        source=DOMAIN,
+        source=source,
         statistic_id=statistic_id,
         unit_class=unit_class,
         unit_of_measurement=metadata["unit"],
@@ -421,7 +432,7 @@ async def _create_statistic(
         statistics.append(stat_data)
     
     # Import to database
-    async_add_external_statistics(hass, stat_metadata, statistics)
+    import_func(hass, stat_metadata, statistics)
     _LOGGER.debug(
         "Imported %d statistics for %s (%s)",
         len(statistics),
