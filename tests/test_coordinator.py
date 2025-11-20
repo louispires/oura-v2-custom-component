@@ -221,8 +221,8 @@ def test_process_stress():
         "stress": {
             "data": [
                 {
-                    "stress_high_duration": 3600,
-                    "recovery_high_duration": 1800,
+                    "stress_high": 3600,
+                    "recovery_high": 1800,
                     "day_summary": "good"
                 }
             ]
@@ -231,8 +231,8 @@ def test_process_stress():
     processed = {}
     coordinator._process_stress(data, processed)
     
-    assert processed["stress_high_duration"] == 3600
-    assert processed["recovery_high_duration"] == 1800
+    assert processed["stress_high_duration"] == 60
+    assert processed["recovery_high_duration"] == 30
     assert processed["stress_day_summary"] == "good"
 
 
@@ -244,10 +244,10 @@ def test_process_resilience():
             "data": [
                 {
                     "level": "solid",
-                    "sleep_recovery_score": 85,
-                    "daytime_recovery_score": 78,
                     "contributors": {
-                        "activity_score": 82
+                        "sleep_recovery": 85,
+                        "daytime_recovery": 78,
+                        "stress": 82
                     }
                 }
             ]
@@ -301,7 +301,7 @@ def test_process_cardiovascular_age():
     coordinator = MockCoordinator()
     data = {
         "cardiovascular_age": {
-            "data": [{"age": 28}]
+            "data": [{"vascular_age": 28}]
         }
     }
     processed = {}
@@ -312,13 +312,18 @@ def test_process_cardiovascular_age():
 
 def test_process_sleep_time():
     """Test processing of sleep time recommendations."""
+    from datetime import datetime, timezone
     coordinator = MockCoordinator()
     data = {
         "sleep_time": {
             "data": [
                 {
-                    "optimal_bedtime_start": "22:00:00",
-                    "optimal_bedtime_end": "23:00:00"
+                    "day": "2023-10-25",
+                    "optimal_bedtime": {
+                        "day_tz": 0,
+                        "start_offset": 79200,  # 22:00:00
+                        "end_offset": 82800     # 23:00:00
+                    }
                 }
             ]
         }
@@ -326,8 +331,12 @@ def test_process_sleep_time():
     processed = {}
     coordinator._process_sleep_time(data, processed)
     
-    assert processed["optimal_bedtime_start"] == "22:00:00"
-    assert processed["optimal_bedtime_end"] == "23:00:00"
+    # 2023-10-25 22:00:00 UTC
+    expected_start = datetime(2023, 10, 25, 22, 0, 0, tzinfo=timezone.utc)
+    expected_end = datetime(2023, 10, 25, 23, 0, 0, tzinfo=timezone.utc)
+    
+    assert processed["optimal_bedtime_start"] == expected_start
+    assert processed["optimal_bedtime_end"] == expected_end
 
 
 def test_process_data_orchestration():

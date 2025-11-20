@@ -1,4 +1,20 @@
-﻿## 🎉 Oura Ring v2 Integration v2.3.0 - Heart Health Scope
+﻿
+**Enjoy tracking your health data with Home Assistant!** 💪
+
+## 🎉 Oura Ring v2 Integration v2.3.1 - Historical Data Fix
+
+This release fixes a critical issue where historical data was not linking correctly to sensor entities.
+
+## 🐛 BUG FIXES
+
+### Historical Data Linking
+- **Fixed**: Historical data imported during setup was not visible in sensor history graphs.
+- **Solution**: Updated statistics import to correctly link data to sensor entities (`sensor.oura_ring_*`) instead of internal IDs.
+- **Impact**: Historical data charts should now populate correctly for new installations.
+
+---
+
+## 🎉 Oura Ring v2 Integration v2.3.0 - Heart Health Scope
 
 This release adds support for the new `heart_health` scope and requires user action to enable.
 
@@ -624,5 +640,3 @@ Complete documentation is available in the repository:
 - Development assisted by: Claude Sonnet 4 (Anthropic AI)
 
 ---
-
-**Enjoy tracking your health data with Home Assistant!** 💪
