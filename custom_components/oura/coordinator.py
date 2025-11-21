@@ -1,7 +1,7 @@
 """DataUpdateCoordinator for Oura Ring."""
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 import logging
 from typing import Any
 
@@ -180,7 +180,21 @@ class OuraDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # HRV during sleep
                 if average_hrv := latest_sleep_detail.get("average_hrv"):
                     processed["average_sleep_hrv"] = average_hrv
-                
+
+                # Bedtime timestamps (when you went to sleep and woke up)
+                # Parse ISO 8601 datetime strings (e.g., "2024-01-15T23:30:00+00:00") to datetime objects
+                if bedtime_start := latest_sleep_detail.get("bedtime_start"):
+                    try:
+                        processed["bedtime_start"] = datetime.fromisoformat(bedtime_start.replace('Z', '+00:00'))
+                    except (ValueError, AttributeError) as e:
+                        _LOGGER.debug("Error parsing bedtime_start '%s': %s", bedtime_start, e)
+
+                if bedtime_end := latest_sleep_detail.get("bedtime_end"):
+                    try:
+                        processed["bedtime_end"] = datetime.fromisoformat(bedtime_end.replace('Z', '+00:00'))
+                    except (ValueError, AttributeError) as e:
+                        _LOGGER.debug("Error parsing bedtime_end '%s': %s", bedtime_end, e)
+
                 # Low battery alert flag (always set, defaults to False)
                 processed["low_battery_alert"] = latest_sleep_detail.get("low_battery_alert", False)
     

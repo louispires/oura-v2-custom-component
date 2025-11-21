@@ -67,6 +67,8 @@ STATISTICS_METADATA = {
     "awake_time": {"name": "Awake Time", "unit": UnitOfTime.HOURS, "has_mean": True, "has_sum": False},
     "sleep_latency": {"name": "Sleep Latency", "unit": UnitOfTime.MINUTES, "has_mean": True, "has_sum": False},
     "time_in_bed": {"name": "Time in Bed", "unit": UnitOfTime.HOURS, "has_mean": True, "has_sum": False},
+    "bedtime_start": {"name": "Bedtime Start", "unit": None, "has_mean": False, "has_sum": False},
+    "bedtime_end": {"name": "Bedtime End", "unit": None, "has_mean": False, "has_sum": False},
     "deep_sleep_percentage": {"name": "Deep Sleep Percentage", "unit": "%", "has_mean": True, "has_sum": False},
     "rem_sleep_percentage": {"name": "REM Sleep Percentage", "unit": "%", "has_mean": True, "has_sum": False},
     "average_sleep_hrv": {"name": "Average Sleep HRV", "unit": "ms", "has_mean": True, "has_sum": False},
@@ -120,6 +122,8 @@ DATA_SOURCE_CONFIG = {
             {"sensor_key": "sleep_latency", "api_path": "latency", "transform": "seconds_to_minutes"},
             {"sensor_key": "time_in_bed", "api_path": "time_in_bed", "transform": "seconds_to_hours"},
             {"sensor_key": "average_sleep_hrv", "api_path": "average_hrv"},
+            {"sensor_key": "bedtime_start", "api_path": "bedtime_start", "transform": "iso_to_datetime"},
+            {"sensor_key": "bedtime_end", "api_path": "bedtime_end", "transform": "iso_to_datetime"},
         ],
         "computed": [
             {
@@ -467,12 +471,12 @@ def _get_nested_value(data: dict[str, Any], path: str) -> Any:
 
 def _apply_transformation(value: Any, transform: str, **kwargs) -> Any:
     """Apply a transformation to a value.
-    
+
     Args:
         value: Value to transform
         transform: Transformation name
         **kwargs: Additional arguments for transformation
-    
+
     Returns:
         Transformed value
     """
@@ -483,7 +487,15 @@ def _apply_transformation(value: Any, transform: str, **kwargs) -> Any:
     elif transform == "percentage":
         total = kwargs.get("total", 100)
         return (value / total) * 100 if total else 0
-    
+    elif transform == "iso_to_datetime":
+        # Parse ISO datetime string to datetime object
+        if isinstance(value, str):
+            try:
+                return datetime.fromisoformat(value.replace('Z', '+00:00'))
+            except (ValueError, AttributeError):
+                return None
+        return value
+
     return value
 
 

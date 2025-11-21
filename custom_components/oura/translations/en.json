@@ -44,6 +44,8 @@
       "deep_sleep_percentage": {"name": "Deep sleep percentage"},
       "rem_sleep_percentage": {"name": "REM sleep percentage"},
       "time_in_bed": {"name": "Time in bed"},
+      "bedtime_start": {"name": "Bedtime start"},
+      "bedtime_end": {"name": "Bedtime end"},
       "readiness_score": {"name": "Readiness score"},
       "temperature_deviation": {"name": "Temperature deviation"},
       "resting_heart_rate": {"name": "Resting heart rate score"},
