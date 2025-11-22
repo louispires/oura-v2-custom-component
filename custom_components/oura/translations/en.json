@@ -61,6 +61,8 @@
       "min_heart_rate": {"name": "Minimum heart rate"},
       "max_heart_rate": {"name": "Maximum heart rate"},
       "average_sleep_hrv": {"name": "Average sleep HRV"},
+      "lowest_sleep_heart_rate": {"name": "Lowest sleep heart rate"},
+      "average_sleep_heart_rate": {"name": "Average sleep heart rate"},
       "stress_high_duration": {"name": "Stress high duration"},
       "recovery_high_duration": {"name": "Recovery high duration"},
       "stress_day_summary": {"name": "Stress day summary"},

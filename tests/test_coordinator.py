@@ -9,7 +9,7 @@ from oura.coordinator import OuraDataUpdateCoordinator
 
 class MockCoordinator:
     """Mock coordinator for testing data processing methods without HA framework."""
-    
+
     # Copy all the processing methods from the real coordinator
     _process_data = OuraDataUpdateCoordinator._process_data
     _process_sleep_scores = OuraDataUpdateCoordinator._process_sleep_scores
@@ -44,7 +44,7 @@ def test_process_sleep_scores():
     }
     processed = {}
     coordinator._process_sleep_scores(data, processed)
-    
+
     assert processed["sleep_score"] == 85
     assert processed["sleep_efficiency"] == 90
     assert processed["restfulness"] == 80
@@ -65,14 +65,16 @@ def test_process_sleep_details_with_durations():
                     "awake_time": 1800,             # 0.5 hours
                     "latency": 600,                 # 10 minutes
                     "time_in_bed": 30600,           # 8.5 hours
-                    "average_hrv": 45
+                    "average_hrv": 45,
+                    "average_heart_rate": 61.125,
+                    "lowest_heart_rate": 55,
                 }
             ]
         }
     }
     processed = {}
     coordinator._process_sleep_details(data, processed)
-    
+
     assert processed["total_sleep_duration"] == 8.0
     assert processed["deep_sleep_duration"] == 2.0
     assert processed["rem_sleep_duration"] == 2.0
@@ -81,6 +83,9 @@ def test_process_sleep_details_with_durations():
     assert processed["sleep_latency"] == 10.0
     assert processed["time_in_bed"] == 8.5
     assert processed["average_sleep_hrv"] == 45
+    assert processed["lowest_sleep_heart_rate"] == 55.0
+    assert processed["average_sleep_heart_rate"] == 61.125
+    assert processed["average_sleep_hrv"] == 45
     assert processed["deep_sleep_percentage"] == 25.0
     assert processed["rem_sleep_percentage"] == 25.0
 
@@ -88,7 +93,7 @@ def test_process_sleep_details_with_durations():
 def test_process_sleep_details_low_battery_alert():
     """Test that low_battery_alert is extracted from sleep_detail data."""
     coordinator = MockCoordinator()
-    
+
     # Test with True value
     data_true = {
         "sleep_detail": {
@@ -102,7 +107,7 @@ def test_process_sleep_details_low_battery_alert():
     processed = {}
     coordinator._process_sleep_details(data_true, processed)
     assert processed["low_battery_alert"] is True
-    
+
     # Test with False value
     data_false = {
         "sleep_detail": {
@@ -116,7 +121,7 @@ def test_process_sleep_details_low_battery_alert():
     processed = {}
     coordinator._process_sleep_details(data_false, processed)
     assert processed["low_battery_alert"] is False
-    
+
     # Test with missing value (should default to False)
     data_missing = {
         "sleep_detail": {
@@ -151,7 +156,7 @@ def test_process_readiness():
     }
     processed = {}
     coordinator._process_readiness(data, processed)
-    
+
     assert processed["readiness_score"] == 82
     assert processed["temperature_deviation"] == -0.5
     assert processed["resting_heart_rate"] == 85
@@ -179,7 +184,7 @@ def test_process_activity():
     }
     processed = {}
     coordinator._process_activity(data, processed)
-    
+
     assert processed["activity_score"] == 88
     assert processed["steps"] == 12345
     assert processed["active_calories"] == 450
@@ -206,7 +211,7 @@ def test_process_heart_rate_with_aggregation():
     }
     processed = {}
     coordinator._process_heart_rate(data, processed)
-    
+
     assert processed["current_heart_rate"] == 57
     assert processed["heart_rate_timestamp"] == "2024-01-01T00:20:00"
     assert processed["average_heart_rate"] == (55 + 58 + 62 + 60 + 57) / 5
@@ -230,7 +235,7 @@ def test_process_stress():
     }
     processed = {}
     coordinator._process_stress(data, processed)
-    
+
     assert processed["stress_high_duration"] == 60
     assert processed["recovery_high_duration"] == 30
     assert processed["stress_day_summary"] == "good"
@@ -255,7 +260,7 @@ def test_process_resilience():
     }
     processed = {}
     coordinator._process_resilience(data, processed)
-    
+
     assert processed["resilience_level"] == "solid"
     assert processed["sleep_recovery_score"] == 85
     assert processed["daytime_recovery_score"] == 78
@@ -277,7 +282,7 @@ def test_process_spo2():
     }
     processed = {}
     coordinator._process_spo2(data, processed)
-    
+
     assert processed["spo2_average"] == 96.5
     assert processed["breathing_disturbance_index"] == 12
 
@@ -292,7 +297,7 @@ def test_process_vo2_max():
     }
     processed = {}
     coordinator._process_vo2_max(data, processed)
-    
+
     assert processed["vo2_max"] == 45.2
 
 
@@ -306,7 +311,7 @@ def test_process_cardiovascular_age():
     }
     processed = {}
     coordinator._process_cardiovascular_age(data, processed)
-    
+
     assert processed["cardiovascular_age"] == 28
 
 
@@ -330,11 +335,11 @@ def test_process_sleep_time():
     }
     processed = {}
     coordinator._process_sleep_time(data, processed)
-    
+
     # 2023-10-25 22:00:00 UTC
     expected_start = datetime(2023, 10, 25, 22, 0, 0, tzinfo=timezone.utc)
     expected_end = datetime(2023, 10, 25, 23, 0, 0, tzinfo=timezone.utc)
-    
+
     assert processed["optimal_bedtime_start"] == expected_start
     assert processed["optimal_bedtime_end"] == expected_end
 
@@ -347,9 +352,9 @@ def test_process_data_orchestration():
         "activity": {"data": [{"score": 88, "steps": 12345}]},
         "readiness": {"data": [{"score": 82}]}
     }
-    
+
     processed = coordinator._process_data(data)
-    
+
     # Verify orchestration calls all relevant processors
     assert processed["sleep_score"] == 85
     assert processed["sleep_efficiency"] == 90
@@ -366,9 +371,9 @@ def test_empty_data_handling():
         "activity": {},
         "readiness": {"data": None}
     }
-    
+
     processed = coordinator._process_data(data)
-    
+
     # Should return empty dict without errors
     assert isinstance(processed, dict)
     assert len(processed) == 0

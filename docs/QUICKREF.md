@@ -85,6 +85,8 @@ sensor.oura_current_heart_rate
 sensor.oura_average_heart_rate
 sensor.oura_min_heart_rate
 sensor.oura_max_heart_rate
+sensor.oura_lowest_sleep_heart_rate
+sensor.oura_average_sleep_heart_rate
 ```
 
 ### HRV Sensors
